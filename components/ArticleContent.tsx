@@ -22,7 +22,7 @@ function normalizeArticleContent(html: string): string {
   const div = document.createElement('div');
   div.innerHTML = out;
 
-  const toArray = (list: NodeListOf<Element>) => Array.from(list);
+  const toArray = (list: NodeListOf<Element> | HTMLCollectionOf<Element>) => Array.from(list);
 
   toArray(div.children).forEach((child) => {
     if (child.tagName !== 'P') return;
