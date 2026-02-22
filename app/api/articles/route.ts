@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
@@ -7,7 +8,7 @@ export async function GET(request: NextRequest) {
   const q = searchParams.get('q');
 
   const now = new Date();
-  const visibleWhere = {
+  const visibleWhere: Prisma.ArticleWhereInput = {
     published: true,
     deletedAt: null,
     OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
