@@ -111,7 +111,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         if (!res.ok) throw new Error(text.slice(0, 200) || `Ошибка ${res.status}`);
       }
       if (!res.ok) throw new Error(data.error || text || `Ошибка ${res.status}`);
-      setForm((f) => ({ ...f, imageUrl: data.url }));
+      setForm((f) => ({ ...f, imageUrl: data.url ?? f.imageUrl }));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка загрузки изображения');
     } finally {
