@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import styles from './page.module.css';
+
+const NO_RESULT_IMAGES = ['/images/NF1.png', '/images/NF2.png', '/images/NF3.png'];
 
 interface Article {
   id: string;
@@ -71,6 +74,10 @@ function SearchContent() {
   };
 
   const noResults = !loading && q && articles.length === 0;
+  const noResultImage = useMemo(
+    () => (noResults ? NO_RESULT_IMAGES[Math.floor(Math.random() * NO_RESULT_IMAGES.length)] : null),
+    [noResults]
+  );
 
   return (
     <div className={styles.container}>
@@ -120,7 +127,11 @@ function SearchContent() {
       ) : noResults ? (
         <div className={styles.noResults}>
           <div className={styles.emptyBox}>
-            <div className={styles.emptyCat} aria-hidden="true">🐱</div>
+            {noResultImage && (
+              <div className={styles.emptyCat} aria-hidden="true">
+                <Image src={noResultImage} alt="" width={213} height={218} className={styles.emptyCatImg} unoptimized />
+              </div>
+            )}
             <p>{t.search.noResults}</p>
           </div>
         </div>

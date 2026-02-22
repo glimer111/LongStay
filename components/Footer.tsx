@@ -3,13 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useSearch } from '@/contexts/SearchContext';
 import { CITIES, TELEGRAM_CONTACT } from '@/lib/constants';
 import styles from './Footer.module.css';
 
 export default function Footer() {
   const { t } = useLanguage();
-  const { openSearch } = useSearch();
 
   return (
     <footer className={styles.footer}>
@@ -44,14 +42,6 @@ export default function Footer() {
             <Link href="/about" className={styles.navLink}>
               {t.nav.about}
             </Link>
-            <button
-              type="button"
-              className={styles.searchBtn}
-              onClick={openSearch}
-              aria-label="Search"
-            >
-              <Image src="/icons/search.png" alt="" width={24} height={24} />
-            </button>
           </nav>
         </div>
 
