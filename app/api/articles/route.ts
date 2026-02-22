@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     published: true,
     deletedAt: null,
     OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
-  } as const;
+  };
 
   if (q) {
     const articles = await prisma.article.findMany({
