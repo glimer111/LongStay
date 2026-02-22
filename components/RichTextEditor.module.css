@@ -1,0 +1,231 @@
+.wrapper {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.toolbar button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar button:hover {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.toolbar button:active {
+  transform: scale(0.98);
+}
+
+.toolbar button.active {
+  background: var(--pink);
+  color: #fff;
+  border-color: var(--pink);
+}
+
+.toolbar button.active:hover {
+  background: #e04d85;
+  border-color: #e04d85;
+  color: #fff;
+}
+
+.toolbar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.imageMenuWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.imageMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  min-width: 200px;
+  padding: 6px 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.imageMenu button {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 8px 14px;
+  min-width: 0;
+  height: auto;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-weight: 500;
+  text-align: left;
+}
+
+.imageMenu button:hover {
+  background: #f5f5f5;
+}
+
+.hiddenFileInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.12);
+  margin: 0 2px;
+  border-radius: 1px;
+}
+
+.editor {
+  min-height: 200px;
+  background: #fff;
+}
+
+.editor :global(.ProseMirror) {
+  padding: 18px 20px;
+  min-height: 180px;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.editor :global(.ProseMirror p) {
+  margin-bottom: 0.75rem;
+}
+
+.editor :global(.ProseMirror p:last-child) {
+  margin-bottom: 0;
+}
+
+.editor :global(.ProseMirror h2) {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.editor :global(.ProseMirror h3) {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.editor :global(.ProseMirror figure.article-figure) {
+  margin: 1rem 0;
+}
+
+.editor :global(.ProseMirror figure.article-figure img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+}
+
+.editor :global(.ProseMirror .article-figcaption) {
+  font-size: 13px;
+  color: var(--muted, #666);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.editor :global(.ProseMirror .article-figcaption .caption-attribution),
+.editor :global(.ProseMirror .article-figcaption .caption-description) {
+  display: block;
+}
+
+.editor :global(.ProseMirror a) {
+  color: var(--pink);
+  text-decoration: underline;
+}
+
+.editor :global(.ProseMirror ul),
+.editor :global(.ProseMirror ol) {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.editor :global(.ProseMirror ul) {
+  list-style-type: disc;
+}
+
+.editor :global(.ProseMirror ol) {
+  list-style-type: decimal;
+}
+
+.editor :global(.ProseMirror li) {
+  margin-bottom: 0.25rem;
+}
+
+.editor :global(.ProseMirror blockquote) {
+  border-left: 4px solid var(--pink);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--muted, #666);
+  font-style: italic;
+}
+
+.editor :global(.ProseMirror pre) {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 14px;
+  font-family: ui-monospace, monospace;
+}
+
+.editor :global(.ProseMirror pre code) {
+  background: none;
+  padding: 0;
+}
+
+.editor :global(.ProseMirror hr) {
+  border: none;
+  border-top: 2px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.loading {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}

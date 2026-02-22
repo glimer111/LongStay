@@ -1,0 +1,249 @@
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.titleBlockWrap {
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.titleBlock {
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  text-align: left;
+}
+
+.youIn {
+  font-size: clamp(60px, 8vw, 150px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 115%;
+  color: var(--yellow);
+  white-space: nowrap;
+  margin-right: 0.08em;
+}
+
+.cityName {
+  font-size: clamp(60px, 8vw, 150px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 115%;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+
+.subheading {
+  display: block;
+  margin: 0;
+  margin-top: -0.2em;
+  padding-left: 0;
+  font-size: clamp(40px, 5vw, 130px);
+  font-weight: 800;
+  line-height: 115%;
+  color: var(--text);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+  justify-content: center;
+}
+
+.category {
+  padding: 10px 18px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 115%;
+  color: var(--text);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.category:hover {
+  color: var(--pink);
+  border-color: var(--pink);
+}
+
+.categoryActive {
+  color: var(--pink);
+  border-color: var(--pink);
+  background: rgba(243, 97, 156, 0.06);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  text-decoration: none;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.card:hover .title {
+  color: var(--pink);
+}
+
+.cardContent {
+  padding: 20px;
+}
+
+.cardCategory {
+  display: block;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-bottom: 8px;
+  line-height: 40px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 100%;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.excerpt {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--muted);
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.read {
+  display: inline-block;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--pink);
+  line-height: 40px;
+  transition: color 0.2s;
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 550/360;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+
+.image img,
+.imageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.loadMore {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.loadMoreBtn {
+  min-width: 315px;
+  height: 52px;
+  padding: 0 24px;
+  background: #EDE986;
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 40px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.loadMoreBtn:hover {
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+
+.loading {
+  text-align: center;
+  padding: 48px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 20px 16px 32px;
+  }
+  .youIn,
+  .cityName {
+    font-size: clamp(36px, 10vw, 60px);
+  }
+  .subheading {
+    font-size: clamp(28px, 6vw, 40px);
+  }
+  .category {
+    font-size: 16px;
+    padding: 8px 14px;
+  }
+  .categories {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .cardContent {
+    padding: 16px;
+  }
+  .cardCategory {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .title {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  .excerpt {
+    font-size: 15px;
+    -webkit-line-clamp: 2;
+    margin-bottom: 10px;
+  }
+  .read {
+    font-size: 20px;
+  }
+  .loadMoreBtn {
+    min-width: 100%;
+    max-width: 320px;
+    font-size: 20px;
+    height: 48px;
+  }
+  .loading {
+    padding: 32px 16px;
+  }
+}

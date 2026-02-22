@@ -1,0 +1,146 @@
+/* TT Norms Std Trial Condensed — файлы положите в public/fonts (см. public/fonts/README.md) */
+@font-face {
+  font-family: 'TT Norms Std Trl Cnd';
+  src:
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condensed%20Regular.otf') format('opentype'),
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condense%20Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Std Trl Cnd';
+  src:
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condensed%20Medium.otf') format('opentype'),
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condense%20Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Std Trl Cnd';
+  src:
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condensed%20Bold.otf') format('opentype'),
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condense%20Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Norms Std Trl Cnd';
+  src:
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condensed%20ExtraBold.otf') format('opentype'),
+    url('/fonts/TT%20Norms%20Std%20Trial%20Condense%20ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* Убираем синюю/серую подсветку при тапе на мобильных (и в DevTools) */
+a,
+button,
+input,
+select,
+textarea,
+[tabindex]:not([tabindex="-1"]) {
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+:root {
+  --font-tt-norms: 'TT Norms Std Trl Cnd', system-ui, sans-serif;
+  --text: #1F1E1E;
+  --muted: #747272;
+  --bg: #FFFFFF;
+  --card: #F9F9F9;
+  --border: rgba(0,0,0,0.08);
+  --pink: #F3619C;
+  --yellow: #EDE986;
+  --cream: #FFFCEC;
+  --footer-bg: #272727;
+  --radius: 10px;
+  --radius-pill: 60px;
+  --container: 1200px;
+  --header-shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-tt-norms);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* simple utility class used across pages */
+.pageContainer {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+.contentCard {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+}
+
+.city-page {
+  min-height: 100%;
+}
+
+.article-page {
+  min-height: 100%;
+}
+
+/* Подпись к изображениям в статьях — серый курсив */
+.article-figcaption,
+.article-figcaption .caption-attribution,
+.article-figcaption .caption-description {
+  color: #888 !important;
+  font-style: italic !important;
+  font-weight: normal !important;
+}
+
+@media (max-width: 720px) {
+  .pageContainer {
+    padding: 20px 16px 48px;
+  }
+  .contentCard {
+    padding: 22px 18px;
+  }
+}

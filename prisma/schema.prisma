@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  password        String
+  name            String?
+  role            String    @default("editor")
+  createdAt       DateTime  @default(now())
+  articlesCreated Article[] @relation("ArticleCreatedBy")
+  articlesUpdated Article[] @relation("ArticleUpdatedBy")
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  city        String
+  cityIds     String?  // JSON array of cities, e.g. ["tbilisi","batumi"]
+  category    String
+  categoryIds String?  // JSON array of categories, e.g. ["interesting","food"]
+  titleRu     String
+  titleEn     String
+  excerptRu   String?
+  excerptEn   String?
+  contentRu   String
+  contentEn   String
+  imageUrl    String?
+  published   Boolean  @default(true)
+  scheduledAt DateTime?  // когда опубликовать (отложенная публикация)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String?
+  updatedById String?
+  createdBy   User?    @relation("ArticleCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?    @relation("ArticleUpdatedBy", fields: [updatedById], references: [id])
+  deletedAt   DateTime? // soft delete; only admin can see and restore
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String
+  nameRu      String
+  nameEn      String
+  city        String
+  externalUrl String?
+  @@unique([slug, city])
+}

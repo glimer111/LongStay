@@ -1,0 +1,123 @@
+.wrapper {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 48px 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+}
+
+.contentBlock {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 100%;
+}
+
+.headingWrapper {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.subscribe {
+  font-size: clamp(36px, 5vw, 80px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.subscribeLine1 {
+  display: block;
+}
+
+.subscribeLine2 {
+  display: block;
+}
+
+.dontLose {
+  font-size: clamp(16px, 1.8vw, 24px);
+  color: var(--pink);
+  margin: 0;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.linksSingle {
+  justify-content: center;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  transition: color 0.2s, filter 0.2s;
+}
+
+.iconWrap {
+  display: block;
+  line-height: 0;
+}
+
+.socialIcon {
+  opacity: 0.9;
+  display: block;
+}
+
+.link:hover .socialIcon {
+  opacity: 1;
+}
+
+
+.link:hover {
+  color: var(--pink);
+}
+
+
+.label {
+  text-transform: capitalize;
+}
+
+@media (max-width: 720px) {
+  .wrapper {
+    padding: 32px 16px;
+  }
+  .headingWrapper {
+    margin-bottom: 32px;
+  }
+  .subscribe {
+    font-size: 36px;
+  }
+  .links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px 40px;
+  }
+  .link {
+    font-size: 18px;
+  }
+  .iconWrap {
+    width: 72px;
+    height: 72px;
+  }
+  .socialIcon {
+    width: 72px !important;
+    height: 72px !important;
+    object-fit: contain;
+  }
+}

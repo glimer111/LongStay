@@ -1,0 +1,237 @@
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.wrapper {
+  width: 100%;
+  min-height: calc(100vh - 76px);
+  text-align: center;
+}
+
+.hero {
+  position: relative;
+  min-height: calc(100vh - 76px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: url('/images/hero.png') center/cover no-repeat;
+  padding: 48px 24px 64px;
+}
+
+.hero h1,
+.hero p,
+.hero h2,
+.hero .mediaTaglineWrap,
+.hero .buttons {
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-size: clamp(80px, 15vw, 400px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 115%;
+  margin-bottom: 0;
+  color: var(--cream);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.mediaTaglineWrap {
+  margin: 0 auto 64px;
+  padding: 0 24px;
+  animation: heroReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  opacity: 0;
+}
+
+.mediaTaglineDesktop {
+  font-size: clamp(16px, 2vw, 28px);
+  color: #343434;
+  line-height: 1.2;
+  margin: 0;
+  max-width: 640px;
+}
+
+.mediaTaglineMobile {
+  display: none;
+  font-size: clamp(16px, 2vw, 28px);
+  color: #343434;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 640px;
+}
+
+.mediaTaglineMobile em {
+  font-style: italic;
+}
+
+.titleDesktop {
+  font-size: clamp(28px, 4vw, 70px);
+  font-weight: 800;
+  margin: 0 0 28px;
+  color: #333333;
+  line-height: 40px;
+  animation: heroReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+.titleMobile {
+  display: none;
+  font-weight: 800;
+  margin: 0 0 28px;
+  color: #333333;
+  animation: heroReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  animation: heroReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+  opacity: 0;
+}
+
+.cooperationButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  padding: 0 24px;
+  background: #EDE986;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #333333;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 115%;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.12s ease, filter 0.12s ease;
+  box-sizing: border-box;
+}
+
+.cooperationButton:hover {
+  filter: brightness(0.98);
+  transform: translateY(-2px);
+}
+
+.cooperationButton:active {
+  opacity: 0.88;
+  filter: brightness(1.08);
+}
+
+/* Десктоп: как на второй фотке — три кнопки одной ширины */
+@media (min-width: 721px) {
+  .mediaTaglineWrap {
+    margin-top: 0;
+  }
+  .mediaTaglineDesktop {
+    display: block;
+    max-width: min(1100px, 94vw);
+  }
+  .mediaTaglineMobile {
+    display: none !important;
+  }
+  .titleDesktop {
+    display: block;
+  }
+  .titleMobile {
+    display: none !important;
+  }
+  .buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    max-width: none;
+    width: auto;
+  }
+  .buttons > a {
+    width: 220px;
+    min-width: 220px;
+    height: 62px;
+    font-size: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .cooperationButton {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .mediaTaglineWrap,
+  .titleDesktop,
+  .titleMobile,
+  .buttons {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 32px 16px 48px;
+  }
+  .logo {
+    font-size: clamp(80px, 15vw, 120px);
+  }
+  .mediaTaglineWrap {
+    margin-bottom: 48px;
+    padding: 0 16px;
+  }
+  .mediaTaglineDesktop {
+    display: none;
+  }
+  .mediaTaglineMobile {
+    display: block;
+    font-size: 16px;
+  }
+  .titleDesktop {
+    display: none;
+  }
+  .titleMobile {
+    display: block;
+    font-size: clamp(32px, 8vw, 40px);
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    max-width: 200px;
+    width: 100%;
+  }
+  .buttons > a {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .cooperationButton {
+    display: inline-flex;
+    font-size: 20px;
+    height: 52px;
+  }
+}
