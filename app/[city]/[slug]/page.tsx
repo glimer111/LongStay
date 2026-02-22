@@ -4,25 +4,8 @@ import ArticleContent from '@/components/ArticleContent';
 import SocialLinks from '@/components/SocialLinks';
 import { prisma } from '@/lib/prisma';
 
-export async function generateStaticParams() {
-  const now = new Date();
-  const articles = await prisma.article.findMany({
-    where: {
-      published: true,
-      deletedAt: null,
-      OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
-    },
-    select: { slug: true, city: true, cityIds: true },
-  });
-  const pairs: { city: string; slug: string }[] = [];
-  for (const a of articles) {
-    const cities = a.cityIds ? (JSON.parse(a.cityIds) as string[]) : [a.city];
-    for (const c of cities) {
-      pairs.push({ city: c, slug: a.slug });
-    }
-  }
-  return pairs;
-}
+// Рендер по запросу, чтобы сборка не требовала БД (таблицы создаются после деплоя через prisma db push)
+export const dynamic = 'force-dynamic';
 
 export default async function ArticlePage({
   params,
