@@ -28,7 +28,7 @@
 }
 
 .title {
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(38px, 5.5vw, 56px);
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0 0 24px;
@@ -222,10 +222,7 @@
     margin-bottom: 48px;
   }
   .aboutImageWrap {
-    min-height: 320px;
-    aspect-ratio: 4/3;
-    max-height: 420px;
-    order: -1;
+    display: none;
   }
   .clientsGrid {
     grid-template-columns: repeat(4, 1fr);
@@ -242,7 +239,7 @@
     margin-bottom: 40px;
   }
   .title {
-    font-size: 28px;
+    font-size: 36px;
     margin-bottom: 20px;
   }
   .intro,
@@ -250,11 +247,6 @@
   .paragraphBold,
   .contact {
     font-size: 20px;
-  }
-  .aboutImageWrap {
-    min-height: 240px;
-    aspect-ratio: 16/10;
-    max-height: 340px;
   }
   .clientsSection {
     margin-bottom: 40px;
