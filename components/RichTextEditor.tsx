@@ -50,7 +50,9 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   useEffect(() => {
     if (editor) {
       editor.on('update', handleUpdate);
-      return () => editor.off('update', handleUpdate);
+      return () => {
+        editor.off('update', handleUpdate);
+      };
     }
   }, [editor, handleUpdate]);
 
@@ -105,10 +107,12 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         if (!res.ok) throw new Error(text.slice(0, 200) || `Ошибка ${res.status}`);
       }
       if (!res.ok) throw new Error(data.error || text || `Ошибка ${res.status}`);
+      const url = data.url ?? '';
+      if (!url) return;
       const attr = (window.prompt('Атрибуция (например: Фото: Author/Shutterstock):', '') ?? '').trim();
       const desc = (window.prompt('Описание подписи:', '') ?? '').trim();
       editor?.chain().focus().setImage({
-        src: data.url,
+        src: url,
         ...(attr && { captionAttribution: attr }),
         ...(desc && { captionDescription: desc }),
       }).run();
