@@ -12,9 +12,11 @@ npm install
 
 ## Настройка базы данных
 
-1. Создайте файл `.env` (если его нет) с содержимым:
+Проект использует **PostgreSQL** (подходит для Vercel, Neon и локальной разработки).
+
+1. Создайте файл `.env` (если его нет). Укажите строку подключения к Postgres (например, из [Neon](https://neon.tech) или локальный сервер):
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
 ```
 
 2. Инициализируйте базу данных:
@@ -53,8 +55,7 @@ npm run dev
 
 ### База данных
 
-- **SQLite** (как сейчас): подходит для Railway, Render, Fly.io и своего VPS — там есть постоянный диск. Укажите путь к файлу БД в `DATABASE_URL` (например, `file:./prisma/data.db`). После деплоя один раз выполните миграции и сид локально против этой БД или через CLI хостинга.
-- **Vercel**: на Vercel нет постоянного диска для SQLite. Нужна внешняя БД — например [Vercel Postgres](https://vercel.com/storage/postgres) или [Neon](https://neon.tech). В `prisma/schema.prisma` замените `provider = "sqlite"` на `provider = "postgresql"` и задайте `DATABASE_URL` от выбранного сервиса. Затем выполните `npx prisma db push` и `npx prisma db seed` (один раз).
+Используется **PostgreSQL**. Задайте `DATABASE_URL` в настройках проекта (например, из [Neon](https://neon.tech) или [Vercel Postgres](https://vercel.com/storage/postgres)). После первого деплоя один раз выполните на своей машине с прод-`DATABASE_URL` в `.env`: `npx prisma db push` и `npx prisma db seed`.
 
 ### Рекомендуемые шаги при первом деплое
 
