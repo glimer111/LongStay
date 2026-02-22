@@ -85,7 +85,9 @@ export async function PUT(
   const updateData = {
     slug,
     city,
+    cityIds: JSON.stringify(cities),
     category,
+    categoryIds: JSON.stringify(categories),
     titleRu,
     titleEn,
     excerptRu: excerptRu ?? article.excerptRu,
@@ -103,21 +105,8 @@ export async function PUT(
     data: updateData,
   });
 
-  try {
-    await prisma.$executeRawUnsafe(
-      'UPDATE Article SET cityIds = ?, categoryIds = ? WHERE id = ?',
-      JSON.stringify(cities),
-      JSON.stringify(categories),
-      id
-    );
-  } catch {
-    // cityIds/categoryIds columns may not exist until after prisma db push
-  }
-
   return Response.json({
     ...updated,
-    cityIds: JSON.stringify(cities),
-    categoryIds: JSON.stringify(categories),
     cities,
     categories,
   });

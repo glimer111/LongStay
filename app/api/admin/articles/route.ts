@@ -78,11 +78,13 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Статья с таким slug уже существует' }, { status: 400 });
   }
 
-  const article = await prisma.article.create({
+  const created = await prisma.article.create({
     data: {
       slug,
       city: cities[0],
+      cityIds: JSON.stringify(cities),
       category: categories[0],
+      categoryIds: JSON.stringify(categories),
       titleRu,
       titleEn,
       excerptRu: excerptRu || null,
@@ -97,16 +99,5 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  try {
-    await prisma.$executeRawUnsafe(
-      'UPDATE Article SET cityIds = ?, categoryIds = ? WHERE id = ?',
-      JSON.stringify(cities),
-      JSON.stringify(categories),
-      article.id
-    );
-  } catch {
-    // cityIds/categoryIds columns may not exist until after prisma db push
-  }
-
-  return Response.json({ ...article, cities, categories });
+  return Response.json({ ...created, cities, categories });
 }
