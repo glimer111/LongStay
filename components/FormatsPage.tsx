@@ -8,11 +8,11 @@ import { getFormatsForCity } from '@/lib/formats';
 import styles from './FormatsPage.module.css';
 
 function linkifyTelegram(text: string) {
-  const parts = text.split('@AnyaKompaniets');
+  const parts = text.split('@AnyaKompanits');
   if (parts.length === 1) return text;
   return parts.flatMap((part, i) =>
     i < parts.length - 1
-      ? [part, <a key={i} href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer" className={styles.telegramLink}>@AnyaKompaniets</a>]
+      ? [part, <a key={i} href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer" className={styles.telegramLink}>@AnyaKompanits</a>]
       : [part]
   );
 }

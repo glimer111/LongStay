@@ -23,4 +23,4 @@ export const SOCIAL_LINKS: Record<City, { instagram?: string; telegram?: string;
   },
 };
 
-export const TELEGRAM_CONTACT = 'https://t.me/AnyaKompaniets';
+export const TELEGRAM_CONTACT = 'https://t.me/AnyaKompanits';

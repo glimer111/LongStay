@@ -50,7 +50,7 @@ export default function Footer() {
           <p className={styles.contactLine}>
             {t.footer.contactAction}{' '}
             <a href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer" className={styles.telegram}>
-              @AnyaKompaniets
+              @AnyaKompanits
             </a>
           </p>
         </div>

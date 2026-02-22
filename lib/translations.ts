@@ -13,7 +13,7 @@ export const translations = {
     },
     footer: {
       tagline: 'городские медиа',
-      telegram: 'По вопросам сотрудничества пишите в Telegram @AnyaKompaniets',
+      telegram: 'По вопросам сотрудничества пишите в Telegram @AnyaKompanits',
       contactTitle: 'По вопросам сотрудничества',
       contactAction: 'пишите в Telegram',
     },
@@ -122,7 +122,7 @@ export const translations = {
     },
     footer: {
       tagline: 'urban media',
-      telegram: 'For cooperation inquiries, write to Telegram @AnyaKompaniets',
+      telegram: 'For cooperation inquiries, write to Telegram @AnyaKompanits',
       contactTitle: 'For cooperation inquiries',
       contactAction: 'write to Telegram',
     },

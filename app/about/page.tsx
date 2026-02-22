@@ -66,7 +66,7 @@ export default function AboutPage() {
             {t.about.contact}
             <br />
             <a href={TELEGRAM_CONTACT} target="_blank" rel="noopener noreferrer" className={styles.telegram}>
-              @AnyaKompaniets
+              @AnyaKompanits
             </a>
           </p>
         </div>

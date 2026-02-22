@@ -111,8 +111,8 @@ export const FORMATS: Format[] = [
     nameRu: 'Дополнительные возможности',
     nameEn: 'Additional options',
     price: '',
-    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n300 GEL — закреп на неделю.\n500 GEL — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompaniets в Telegram.',
-    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n300 GEL — pin for a week.\n500 GEL — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompaniets in Telegram.',
+    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n300 GEL — закреп на неделю.\n500 GEL — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompanits в Telegram.',
+    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n300 GEL — pin for a week.\n500 GEL — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompanits in Telegram.',
   },
 ];
 
@@ -157,8 +157,8 @@ const BATUMI_OVERRIDES: Partial<Record<string, { price: string; contentRu: strin
   },
   '13': {
     price: '',
-    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n80 GEL — закреп на неделю.\n200 GEL — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompaniets в Telegram.',
-    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n80 GEL — pin for a week.\n200 GEL — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompaniets in Telegram.',
+    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n80 GEL — закреп на неделю.\n200 GEL — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompanits в Telegram.',
+    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n80 GEL — pin for a week.\n200 GEL — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompanits in Telegram.',
   },
 };
 
@@ -211,8 +211,8 @@ const DUBAI_OVERRIDES: Partial<Record<string, { price: string; contentRu: string
   },
   '13': {
     price: '',
-    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n$100 — закреп на неделю.\n$250 — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompaniets в Telegram.',
-    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n$100 — pin for a week.\n$250 — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompaniets in Telegram.',
+    contentRu: 'Закреп рилс/поста в профиле.\nУточнение: важно, чтобы у вас было уже опубликованное промо в нашем аккаунте в формате reels или поста в карточках.\n\n$100 — закреп на неделю.\n$250 — закреп на месяц.\n\nИндивидуальное размещение для вашей ниши. Реклама только вашего бизнеса в определенной нише.\nСтоимость уточняйте в директ @AnyaKompanits в Telegram.',
+    contentEn: 'Pin reels/post in profile.\nNote: you must have published promo in our account (reels or carousel).\n\n$100 — pin for a week.\n$250 — pin for a month.\n\nIndividual placement for your niche. Advertising only your business.\nPricing: contact @AnyaKompanits in Telegram.',
   },
 };
 
