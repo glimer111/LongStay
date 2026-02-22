@@ -8,7 +8,7 @@ const LANG_KEY = 'long-stay-lang';
 const LanguageContext = createContext<{
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (typeof translations)['ru'];
+  t: (typeof translations)[Locale];
 } | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
