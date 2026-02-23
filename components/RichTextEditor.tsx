@@ -124,16 +124,48 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     }
   };
 
-  const setLink = () => {
-    const url = window.prompt('URL ссылки:');
-    if (url) {
-      editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  const setLink = useCallback(() => {
+    if (!editor) return;
+    editor.chain().focus().extendMarkRange('link').run();
+    const currentHref = editor.getAttributes('link').href ?? '';
+    const url = window.prompt('URL ссылки:', currentHref);
+    if (url === null) return;
+    if (url.trim() === '') {
+      editor.chain().focus().unsetLink().run();
+    } else {
+      editor.chain().focus().extendMarkRange('link').setLink({ href: url.trim() }).run();
     }
-  };
+  }, [editor]);
 
   const removeLink = () => {
     editor?.chain().focus().unsetLink().run();
   };
+
+  useEffect(() => {
+    if (!editor) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!editor.isFocused) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      const key = e.key.toLowerCase();
+      if (key === 'b') {
+        e.preventDefault();
+        editor.chain().focus().toggleBold().run();
+        return;
+      }
+      if (key === 'i') {
+        e.preventDefault();
+        editor.chain().focus().toggleItalic().run();
+        return;
+      }
+      if (key === 'u') {
+        e.preventDefault();
+        setLink();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, [editor, setLink]);
 
   if (!editor) return <div className={styles.loading}>Загрузка редактора...</div>;
 
@@ -144,7 +176,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? styles.active : ''}
-          title="Жирный"
+          title="Жирный (⌘B)"
         >
           <b>B</b>
         </button>
@@ -152,7 +184,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? styles.active : ''}
-          title="Курсив"
+          title="Курсив (⌘I)"
         >
           <i>I</i>
         </button>
@@ -229,7 +261,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           H3
         </button>
         <span className={styles.separator} />
-        <button type="button" onClick={setLink} className={editor.isActive('link') ? styles.active : ''} title="Вставить ссылку">
+        <button type="button" onClick={setLink} className={editor.isActive('link') ? styles.active : ''} title="Вставить или изменить ссылку (⌘U)">
           🔗
         </button>
         <button type="button" onClick={removeLink} disabled={!editor.isActive('link')} title="Убрать ссылку">

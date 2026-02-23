@@ -15,7 +15,7 @@ interface Article {
   slug: string;
   city: string;
   titleRu: string;
-  titleEn: string;
+  titleEn: string | null;
   excerptRu: string | null;
   excerptEn: string | null;
 }
@@ -43,8 +43,8 @@ function SearchContent() {
       .finally(() => setLoading(false));
   }, [q]);
 
-  const getTitle = (a: Article) => (locale === 'ru' ? a.titleRu : a.titleEn);
-  const getExcerpt = (a: Article) => (locale === 'ru' ? a.excerptRu : a.excerptEn) || '';
+  const getTitle = (a: Article) => (locale === 'ru' ? a.titleRu : (a.titleEn || a.titleRu));
+  const getExcerpt = (a: Article) => (locale === 'ru' ? a.excerptRu : (a.excerptEn || a.excerptRu)) || '';
 
   const pushQuery = (nextQ: string) => {
     const trimmed = nextQ.trim();

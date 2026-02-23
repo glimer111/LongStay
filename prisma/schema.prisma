@@ -26,11 +26,11 @@ model Article {
   category    String
   categoryIds String?  // JSON array of categories, e.g. ["interesting","food"]
   titleRu     String
-  titleEn     String
+  titleEn     String?  // опционально: можно публиковать только русскую версию
   excerptRu   String?
   excerptEn   String?
   contentRu   String
-  contentEn   String
+  contentEn   String?  // опционально
   imageUrl    String?
   published   Boolean  @default(true)
   scheduledAt DateTime?  // когда опубликовать (отложенная публикация)

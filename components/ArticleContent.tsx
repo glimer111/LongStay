@@ -8,11 +8,11 @@ import styles from './ArticleContent.module.css';
 
 interface Article {
   titleRu: string;
-  titleEn: string;
+  titleEn: string | null;
   excerptRu?: string | null;
   excerptEn?: string | null;
   contentRu: string;
-  contentEn: string;
+  contentEn: string | null;
   imageUrl: string | null;
 }
 
@@ -57,9 +57,9 @@ function normalizeArticleContent(html: string): string {
 
 export default function ArticleContent({ article }: { article: Article }) {
   const { locale } = useLanguage();
-  const title = locale === 'ru' ? article.titleRu : article.titleEn;
-  const excerpt = locale === 'ru' ? article.excerptRu : article.excerptEn;
-  const rawContent = locale === 'ru' ? article.contentRu : article.contentEn;
+  const title = locale === 'ru' ? article.titleRu : (article.titleEn || article.titleRu);
+  const excerpt = locale === 'ru' ? article.excerptRu : (article.excerptEn || article.excerptRu);
+  const rawContent = locale === 'ru' ? article.contentRu : (article.contentEn || article.contentRu);
   const [content, setContent] = useState(rawContent);
 
   useEffect(() => {

@@ -19,7 +19,7 @@ interface Article {
   cityIds?: string | null;
   categoryIds?: string | null;
   titleRu: string;
-  titleEn: string;
+  titleEn: string | null;
   published: boolean;
   scheduledAt: string | null;
   createdAt: string;

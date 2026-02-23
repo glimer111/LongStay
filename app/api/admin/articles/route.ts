@@ -66,9 +66,9 @@ export async function POST(request: NextRequest) {
   const cities: string[] = Array.isArray(citiesArr) && citiesArr.length > 0 ? citiesArr : ['tbilisi'];
   const categories: string[] = Array.isArray(categoriesArr) && categoriesArr.length > 0 ? categoriesArr : ['interesting'];
 
-  if (!slug || !titleRu || !titleEn || !contentRu || !contentEn) {
+  if (!slug || !titleRu || !contentRu) {
     return Response.json(
-      { error: 'slug, titleRu, titleEn, contentRu, contentEn обязательны' },
+      { error: 'Обязательны: slug, заголовок RU и контент RU' },
       { status: 400 }
     );
   }
@@ -86,11 +86,11 @@ export async function POST(request: NextRequest) {
       category: categories[0],
       categoryIds: JSON.stringify(categories),
       titleRu,
-      titleEn,
+      titleEn: titleEn && String(titleEn).trim() ? titleEn : null,
       excerptRu: excerptRu || null,
       excerptEn: excerptEn || null,
       contentRu,
-      contentEn,
+      contentEn: contentEn && String(contentEn).trim() ? contentEn : null,
       imageUrl: imageUrl || null,
       published: publishedFinal,
       scheduledAt,

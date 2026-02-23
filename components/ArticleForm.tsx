@@ -128,8 +128,8 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!stripHtml(form.contentRu) || !stripHtml(form.contentEn)) {
-      setError('Контент RU и EN обязательны');
+    if (!stripHtml(form.contentRu)) {
+      setError('Контент RU обязателен');
       return;
     }
     setLoading(true);
@@ -215,12 +215,12 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         />
       </div>
       <div className={styles.row}>
-        <label>Заголовок EN</label>
+        <label>Заголовок EN (необязательно)</label>
         <input
           name="titleEn"
           value={form.titleEn}
           onChange={handleChange}
-          required
+          placeholder="Оставьте пустым, если статья только на русском"
         />
       </div>
       <div className={styles.row}>
@@ -249,7 +249,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         />
       </div>
       <div className={styles.row}>
-        <label>Контент EN</label>
+        <label>Контент EN (необязательно)</label>
         <RichTextEditor
           value={form.contentEn}
           onChange={handleContentChange('contentEn')}

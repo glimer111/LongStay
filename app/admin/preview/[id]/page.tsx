@@ -13,11 +13,11 @@ import styles from './preview.module.css';
 interface Article {
   city: string;
   titleRu: string;
-  titleEn: string;
+  titleEn: string | null;
   excerptRu?: string | null;
   excerptEn?: string | null;
   contentRu: string;
-  contentEn: string;
+  contentEn: string | null;
   imageUrl: string | null;
 }
 

@@ -12,7 +12,7 @@ interface Article {
   city: string;
   category: string;
   titleRu: string;
-  titleEn: string;
+  titleEn: string | null;
   excerptRu: string | null;
   excerptEn: string | null;
   imageUrl: string | null;
@@ -70,8 +70,8 @@ export default function CityArticles({ city }: { city: City }) {
   const displayedArticles = filteredArticles.slice(0, displayCount);
   const hasMore = displayedArticles.length < filteredArticles.length;
 
-  const getTitle = (a: Article) => (locale === 'ru' ? a.titleRu : a.titleEn);
-  const getExcerpt = (a: Article) => (locale === 'ru' ? a.excerptRu : a.excerptEn) || '';
+  const getTitle = (a: Article) => (locale === 'ru' ? a.titleRu : (a.titleEn || a.titleRu));
+  const getExcerpt = (a: Article) => (locale === 'ru' ? a.excerptRu : (a.excerptEn || a.excerptRu)) || '';
 
   const handleCategoryClick = (slug: string, externalUrl: string | null) => {
     if (externalUrl) {

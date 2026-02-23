@@ -68,9 +68,9 @@ export async function PUT(
   const city = cities[0];
   const category = categories[0];
 
-  if (!slug || !titleRu || !titleEn || !contentRu || !contentEn) {
+  if (!slug || !titleRu || !contentRu) {
     return Response.json(
-      { error: 'slug, titleRu, titleEn, contentRu, contentEn обязательны' },
+      { error: 'Обязательны: slug, заголовок RU и контент RU' },
       { status: 400 }
     );
   }
@@ -89,11 +89,11 @@ export async function PUT(
     category,
     categoryIds: JSON.stringify(categories),
     titleRu,
-    titleEn,
+    titleEn: titleEn != null && String(titleEn).trim() ? titleEn : null,
     excerptRu: excerptRu ?? article.excerptRu,
     excerptEn: excerptEn ?? article.excerptEn,
     contentRu,
-    contentEn,
+    contentEn: contentEn != null && String(contentEn).trim() ? contentEn : null,
     imageUrl: imageUrl ?? article.imageUrl,
     published: published ?? article.published,
     scheduledAt: scheduledAtRaw !== undefined ? scheduledAt : article.scheduledAt,
