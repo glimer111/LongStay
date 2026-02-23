@@ -173,11 +173,11 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
       editor
         .chain()
         .focus()
-        .setTextSelection(from, from + len)
+        .setTextSelection({ from, to: from + len })
         .setLink({ href: url })
         .run();
       const after = from + len;
-      editor.chain().focus().setTextSelection(after, after).insertContent(ZERO_WIDTH_SPACE).run();
+      editor.chain().focus().setTextSelection(after).insertContent(ZERO_WIDTH_SPACE).run();
       clearStoredMarksAfterLink(editor);
     } else {
       const { from } = editor.state.selection;
@@ -193,7 +193,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         })
         .run();
       const after = from + len;
-      editor.chain().focus().setTextSelection(after, after).insertContent(ZERO_WIDTH_SPACE).run();
+      editor.chain().focus().setTextSelection(after).insertContent(ZERO_WIDTH_SPACE).run();
       clearStoredMarksAfterLink(editor);
     }
   }, [editor, linkModalHref, linkModalText, clearStoredMarksAfterLink]);
