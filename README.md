@@ -56,7 +56,7 @@ npm run dev
 
 ### База данных
 
-Используется **PostgreSQL**. Задайте `DATABASE_URL` в настройках проекта (например, из [Neon](https://neon.tech) или [Vercel Postgres](https://vercel.com/storage/postgres)). После первого деплоя один раз выполните на своей машине с прод-`DATABASE_URL` в `.env`: `npx prisma db push` и `npx prisma db seed`.
+Используется **PostgreSQL**. Задайте `DATABASE_URL` в настройках проекта (например, из [Neon](https://neon.tech) или [Vercel Postgres](https://vercel.com/storage/postgres)). После первого деплоя один раз выполните на своей машине с прод-`DATABASE_URL` в `.env`: `npx prisma db push` и `npx prisma db seed`. Если вы уже делали деплой до того, как поля `titleEn` и `contentEn` стали необязательными, выполните в консоли БД скрипт `prisma/make-article-en-nullable.sql` или снова `npx prisma db push` с прод-URL.
 
 ### Рекомендуемые шаги при первом деплое
 
