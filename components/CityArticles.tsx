@@ -63,9 +63,14 @@ export default function CityArticles({ city }: { city: City }) {
     }
   };
 
+  const articlesForLocale =
+    locale === 'en'
+      ? articles.filter((a) => a.titleEn != null && String(a.titleEn).trim() !== '')
+      : articles;
+
   const filteredArticles = activeCategory && activeCategory !== 'all'
-    ? articles.filter((a) => articleHasCategory(a, activeCategory))
-    : articles;
+    ? articlesForLocale.filter((a) => articleHasCategory(a, activeCategory))
+    : articlesForLocale;
 
   const displayedArticles = filteredArticles.slice(0, displayCount);
   const hasMore = displayedArticles.length < filteredArticles.length;

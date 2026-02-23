@@ -56,7 +56,25 @@ function normalizeArticleContent(html: string): string {
 }
 
 export default function ArticleContent({ article }: { article: Article }) {
-  const { locale } = useLanguage();
+  const { locale, setLocale, t } = useLanguage();
+  const hasEnglish = (article.titleEn != null && String(article.titleEn).trim() !== '') &&
+    (article.contentEn != null && String(article.contentEn).trim() !== '');
+
+  if (locale === 'en' && !hasEnglish) {
+    return (
+      <article className={styles.article}>
+        <div className={styles.container}>
+          <div className={styles.onlyRussian}>
+            <p>{t.article.onlyInRussian}</p>
+            <button type="button" onClick={() => setLocale('ru')} className={styles.showRussianBtn}>
+              {t.article.showInRussian}
+            </button>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   const title = locale === 'ru' ? article.titleRu : (article.titleEn || article.titleRu);
   const excerpt = locale === 'ru' ? article.excerptRu : (article.excerptEn || article.excerptRu);
   const rawContent = locale === 'ru' ? article.contentRu : (article.contentEn || article.contentRu);

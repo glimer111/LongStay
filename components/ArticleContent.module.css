@@ -24,6 +24,30 @@
   margin: 0 0 24px;
 }
 
+.onlyRussian {
+  text-align: center;
+  padding: 48px 24px;
+}
+.onlyRussian p {
+  font-size: 18px;
+  color: var(--muted, #666);
+  margin: 0 0 20px;
+}
+.showRussianBtn {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--pink, #e91e8c);
+  border: none;
+  border-radius: var(--radius, 8px);
+  cursor: pointer;
+}
+.showRussianBtn:hover {
+  opacity: 0.9;
+}
+
 .image {
   margin-bottom: 28px;
   border-radius: var(--radius);

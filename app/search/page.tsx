@@ -43,6 +43,11 @@ function SearchContent() {
       .finally(() => setLoading(false));
   }, [q]);
 
+  const articlesForLocale =
+    locale === 'en'
+      ? articles.filter((a) => a.titleEn != null && String(a.titleEn).trim() !== '')
+      : articles;
+
   const getTitle = (a: Article) => (locale === 'ru' ? a.titleRu : (a.titleEn || a.titleRu));
   const getExcerpt = (a: Article) => (locale === 'ru' ? a.excerptRu : (a.excerptEn || a.excerptRu)) || '';
 
@@ -73,7 +78,7 @@ function SearchContent() {
     }
   };
 
-  const noResults = !loading && q && articles.length === 0;
+  const noResults = !loading && q && articlesForLocale.length === 0;
   const noResultImage = useMemo(
     () => (noResults ? NO_RESULT_IMAGES[Math.floor(Math.random() * NO_RESULT_IMAGES.length)] : null),
     [noResults]
@@ -116,7 +121,7 @@ function SearchContent() {
       {q && (
         <h1 className={styles.title}>
           {t.search.resultsFor} <strong>«{q}»</strong>
-          {!loading && !noResults ? `, ${t.search.found} ${articles.length}` : ''}
+          {!loading && !noResults ? `, ${t.search.found} ${articlesForLocale.length}` : ''}
         </h1>
       )}
 
@@ -138,7 +143,7 @@ function SearchContent() {
       ) : (
         <>
           <div className={styles.grid}>
-            {articles.map((article) => (
+            {articlesForLocale.map((article) => (
               <Link
                 key={article.id}
                 href={`/${article.city}/${article.slug}`}

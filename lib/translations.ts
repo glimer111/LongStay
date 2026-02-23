@@ -41,6 +41,10 @@ export const translations = {
       materials: 'материалы',
       read: 'Читать',
     },
+    article: {
+      onlyInRussian: 'Эта статья доступна только на русском.',
+      showInRussian: 'Показать на русском',
+    },
     cooperation: {
       headline: 'Расскажите о своем бизнесе всему городу и туристам.',
       subheadline: 'У нас много вариантов рекламных форматов для разных ниш и бюджета.',
@@ -149,6 +153,10 @@ export const translations = {
       youIn: 'YOU ARE IN',
       materials: 'materials',
       read: 'Read',
+    },
+    article: {
+      onlyInRussian: 'This article is only available in Russian.',
+      showInRussian: 'Show in Russian',
     },
     cooperation: {
       headline: 'Tell the whole city and tourists about your business.',
