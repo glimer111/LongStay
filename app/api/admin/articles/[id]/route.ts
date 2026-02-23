@@ -81,25 +81,29 @@ export async function PUT(
     );
   }
 
+  const slugStr = String(slug);
+  const titleRuStr = String(titleRu);
+  const contentRuStr = String(contentRu);
+
   const existing = await prisma.article.findFirst({
-    where: { slug, id: { not: id }, deletedAt: null },
+    where: { slug: slugStr, id: { not: id }, deletedAt: null },
   });
   if (existing) {
     return Response.json({ error: 'Статья с таким slug уже существует' }, { status: 400 });
   }
 
   const updateData = {
-    slug,
+    slug: slugStr,
     city,
     cityIds: JSON.stringify(cities),
     category,
     categoryIds: JSON.stringify(categories),
-    titleRu,
-    titleEn: titleEn != null && String(titleEn).trim() ? titleEn : null,
+    titleRu: titleRuStr,
+    titleEn: titleEn != null && String(titleEn).trim() ? String(titleEn) : null,
     excerptRu: excerptRu ?? article.excerptRu,
     excerptEn: excerptEn ?? article.excerptEn,
-    contentRu,
-    contentEn: contentEn != null && String(contentEn).trim() ? contentEn : null,
+    contentRu: contentRuStr,
+    contentEn: contentEn != null && String(contentEn).trim() ? String(contentEn) : null,
     imageUrl: imageUrl ?? article.imageUrl,
     published: published ?? article.published,
     scheduledAt: scheduledAtRaw !== undefined ? scheduledAt : article.scheduledAt,
