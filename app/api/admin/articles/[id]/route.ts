@@ -43,7 +43,13 @@ export async function PUT(
     return Response.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: 'Неверный формат данных (JSON)' }, { status: 400 });
+  }
+
   const {
     slug,
     cities: citiesArr,
@@ -100,16 +106,20 @@ export async function PUT(
     updatedById: userId,
   };
 
-  const updated = await prisma.article.update({
-    where: { id },
-    data: updateData,
-  });
-
-  return Response.json({
-    ...updated,
-    cities,
-    categories,
-  });
+  try {
+    const updated = await prisma.article.update({
+      where: { id },
+      data: updateData,
+    });
+    return Response.json({
+      ...updated,
+      cities,
+      categories,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Ошибка при сохранении';
+    return Response.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function DELETE(

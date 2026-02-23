@@ -41,7 +41,12 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: 'Неверный формат данных (JSON)' }, { status: 400 });
+  }
   const {
     slug,
     cities: citiesArr,
@@ -78,26 +83,30 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Статья с таким slug уже существует' }, { status: 400 });
   }
 
-  const created = await prisma.article.create({
-    data: {
-      slug,
-      city: cities[0],
-      cityIds: JSON.stringify(cities),
-      category: categories[0],
-      categoryIds: JSON.stringify(categories),
-      titleRu,
-      titleEn: titleEn && String(titleEn).trim() ? titleEn : null,
-      excerptRu: excerptRu || null,
-      excerptEn: excerptEn || null,
-      contentRu,
-      contentEn: contentEn && String(contentEn).trim() ? contentEn : null,
-      imageUrl: imageUrl || null,
-      published: publishedFinal,
-      scheduledAt,
-      createdById: userId,
-      updatedById: userId,
-    },
-  });
-
-  return Response.json({ ...created, cities, categories });
+  try {
+    const created = await prisma.article.create({
+      data: {
+        slug,
+        city: cities[0],
+        cityIds: JSON.stringify(cities),
+        category: categories[0],
+        categoryIds: JSON.stringify(categories),
+        titleRu,
+        titleEn: titleEn && String(titleEn).trim() ? titleEn : null,
+        excerptRu: excerptRu || null,
+        excerptEn: excerptEn || null,
+        contentRu,
+        contentEn: contentEn && String(contentEn).trim() ? contentEn : null,
+        imageUrl: imageUrl || null,
+        published: publishedFinal,
+        scheduledAt,
+        createdById: userId,
+        updatedById: userId,
+      },
+    });
+    return Response.json({ ...created, cities, categories });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Ошибка при сохранении';
+    return Response.json({ error: message }, { status: 500 });
+  }
 }

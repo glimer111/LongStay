@@ -138,6 +138,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
       const method = isEdit ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
@@ -149,14 +150,24 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
           scheduledAt: form.scheduledAt ? new Date(form.scheduledAt).toISOString() : null,
         }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data: { error?: string } = {};
+      try {
+        if (text) data = JSON.parse(text);
+      } catch {
+        if (!res.ok) {
+          setError(text.slice(0, 200) || `Ошибка сервера ${res.status}`);
+          return;
+        }
+      }
       if (!res.ok) {
-        setError(data.error || 'Ошибка');
+        setError(data.error || text.slice(0, 200) || `Ошибка ${res.status}`);
         return;
       }
       onSuccess();
-    } catch {
-      setError('Ошибка сети');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Ошибка сети';
+      setError(msg === 'Failed to fetch' ? 'Нет связи с сервером. Проверьте интернет и что сервер запущен.' : msg);
     } finally {
       setLoading(false);
     }
