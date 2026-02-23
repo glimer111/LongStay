@@ -104,7 +104,7 @@ export async function PUT(
     excerptEn: excerptEn ?? article.excerptEn,
     contentRu: contentRuStr,
     contentEn: contentEn != null && String(contentEn).trim() ? String(contentEn) : null,
-    imageUrl: imageUrl ?? article.imageUrl,
+    imageUrl: imageUrl !== undefined && imageUrl !== null ? String(imageUrl) : article.imageUrl,
     published: published ?? article.published,
     scheduledAt: scheduledAtRaw !== undefined ? scheduledAt : article.scheduledAt,
     updatedById: userId,

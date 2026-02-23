@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
         excerptEn: excerptEn != null ? String(excerptEn) : null,
         contentRu: contentRuStr,
         contentEn: contentEn && String(contentEn).trim() ? String(contentEn) : null,
-        imageUrl: imageUrl || null,
+        imageUrl: imageUrl != null && String(imageUrl).trim() ? String(imageUrl) : null,
         published: publishedFinal,
         scheduledAt,
         createdById: userId,
