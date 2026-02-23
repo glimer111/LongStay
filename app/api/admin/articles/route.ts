@@ -61,12 +61,12 @@ export async function POST(request: NextRequest) {
     published,
     scheduledAt: scheduledAtRaw,
   } = body;
-  const scheduledAt =
+  const scheduledAt: Date | null =
     scheduledAtRaw != null && scheduledAtRaw !== ''
       ? new Date(scheduledAtRaw as string)
       : null;
   const isScheduled = scheduledAt != null && scheduledAt > new Date();
-  const publishedFinal = isScheduled ? true : (published ?? true);
+  const publishedFinal: boolean = isScheduled ? true : (typeof published === 'boolean' ? published : true);
 
   const cities: string[] = Array.isArray(citiesArr) && citiesArr.length > 0 ? citiesArr : ['tbilisi'];
   const categories: string[] = Array.isArray(categoriesArr) && categoriesArr.length > 0 ? categoriesArr : ['interesting'];

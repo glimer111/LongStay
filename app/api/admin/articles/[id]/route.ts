@@ -92,6 +92,11 @@ export async function PUT(
     return Response.json({ error: 'Статья с таким slug уже существует' }, { status: 400 });
   }
 
+  const excerptRuVal = excerptRu !== undefined && excerptRu !== null ? String(excerptRu) : article.excerptRu;
+  const excerptEnVal = excerptEn !== undefined && excerptEn !== null ? String(excerptEn) : article.excerptEn;
+  const publishedVal: boolean = typeof published === 'boolean' ? published : article.published;
+  const scheduledAtVal: Date | null = scheduledAtRaw !== undefined ? scheduledAt : article.scheduledAt;
+
   const updateData = {
     slug: slugStr,
     city,
@@ -100,13 +105,13 @@ export async function PUT(
     categoryIds: JSON.stringify(categories),
     titleRu: titleRuStr,
     titleEn: titleEn != null && String(titleEn).trim() ? String(titleEn) : null,
-    excerptRu: excerptRu ?? article.excerptRu,
-    excerptEn: excerptEn ?? article.excerptEn,
+    excerptRu: excerptRuVal,
+    excerptEn: excerptEnVal,
     contentRu: contentRuStr,
     contentEn: contentEn != null && String(contentEn).trim() ? String(contentEn) : null,
     imageUrl: imageUrl !== undefined && imageUrl !== null ? String(imageUrl) : article.imageUrl,
-    published: published ?? article.published,
-    scheduledAt: scheduledAtRaw !== undefined ? scheduledAt : article.scheduledAt,
+    published: publishedVal,
+    scheduledAt: scheduledAtVal,
     updatedById: userId,
   };
 
