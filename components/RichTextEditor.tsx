@@ -124,18 +124,96 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     }
   };
 
-  const setLink = useCallback(() => {
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
+  const [linkModalText, setLinkModalText] = useState('');
+  const [linkModalHref, setLinkModalHref] = useState('');
+  const linkModalIsEdit = useRef(false);
+
+  const openLinkModal = useCallback(() => {
     if (!editor) return;
     editor.chain().focus().extendMarkRange('link').run();
-    const currentHref = editor.getAttributes('link').href ?? '';
-    const url = window.prompt('URL ссылки:', currentHref);
-    if (url === null) return;
-    if (url.trim() === '') {
-      editor.chain().focus().unsetLink().run();
-    } else {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: url.trim() }).run();
-    }
+    const isLink = editor.isActive('link');
+    linkModalIsEdit.current = isLink;
+    const href = isLink ? (editor.getAttributes('link').href ?? '') : '';
+    const { from, to } = editor.state.selection;
+    const text = editor.state.doc.textBetween(from, to, ' ');
+    setLinkModalText(text);
+    setLinkModalHref(href);
+    setLinkModalOpen(true);
   }, [editor]);
+
+  const clearStoredMarksAfterLink = useCallback((ed: ReturnType<typeof useEditor>) => {
+    if (!ed) return;
+    setTimeout(() => {
+      if (!ed.view) return;
+      const { from, to } = ed.state.selection;
+      if (from !== to) return;
+      const tr = ed.state.tr.setStoredMarks([]);
+      ed.view.dispatch(tr);
+    }, 10);
+  }, []);
+
+  const applyLinkModal = useCallback(() => {
+    if (!editor) return;
+    const url = linkModalHref.trim();
+    const linkText = linkModalText.trim();
+    setLinkModalOpen(false);
+    if (!url) {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      return;
+    }
+    const ZERO_WIDTH_SPACE = '\u200B';
+
+    if (linkModalIsEdit.current) {
+      editor.chain().focus().extendMarkRange('link').run();
+      const from = editor.state.selection.from;
+      const insertText = linkText || url;
+      const len = insertText.length;
+      editor.chain().focus().insertContent(insertText).run();
+      editor
+        .chain()
+        .focus()
+        .setTextSelection(from, from + len)
+        .setLink({ href: url })
+        .run();
+      const after = from + len;
+      editor.chain().focus().setTextSelection(after, after).insertContent(ZERO_WIDTH_SPACE).run();
+      clearStoredMarksAfterLink(editor);
+    } else {
+      const { from } = editor.state.selection;
+      const insertText = linkText || url;
+      const len = insertText.length;
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: 'text',
+          text: insertText,
+          marks: [{ type: 'link', attrs: { href: url } }],
+        })
+        .run();
+      const after = from + len;
+      editor.chain().focus().setTextSelection(after, after).insertContent(ZERO_WIDTH_SPACE).run();
+      clearStoredMarksAfterLink(editor);
+    }
+  }, [editor, linkModalHref, linkModalText, clearStoredMarksAfterLink]);
+
+  useEffect(() => {
+    if (!linkModalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLinkModalOpen(false);
+      if (e.key === 'Enter' && (e.target as HTMLElement)?.closest(`.${styles.linkModal}`)) {
+        e.preventDefault();
+        applyLinkModal();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [linkModalOpen, applyLinkModal]);
+
+  const setLink = useCallback(() => {
+    openLinkModal();
+  }, [openLinkModal]);
 
   const removeLink = () => {
     editor?.chain().focus().unsetLink().run();
@@ -176,7 +254,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? styles.active : ''}
-          title="Жирный (⌘B)"
+          title="Жирный (Ctrl+B / ⌘B)"
         >
           <b>B</b>
         </button>
@@ -184,7 +262,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? styles.active : ''}
-          title="Курсив (⌘I)"
+          title="Курсив (Ctrl+I / ⌘I)"
         >
           <i>I</i>
         </button>
@@ -261,7 +339,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           H3
         </button>
         <span className={styles.separator} />
-        <button type="button" onClick={setLink} className={editor.isActive('link') ? styles.active : ''} title="Вставить или изменить ссылку (⌘U)">
+        <button type="button" onClick={setLink} className={editor.isActive('link') ? styles.active : ''} title="Вставить или изменить ссылку (Ctrl+U / ⌘U)">
           🔗
         </button>
         <button type="button" onClick={removeLink} disabled={!editor.isActive('link')} title="Убрать ссылку">
@@ -298,6 +376,39 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         />
       </div>
       <EditorContent editor={editor} className={styles.editor} />
+
+      {linkModalOpen && (
+        <div className={styles.linkModalOverlay} onClick={() => setLinkModalOpen(false)} role="dialog" aria-modal="true" aria-labelledby="link-modal-title">
+          <div className={styles.linkModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.linkModalHeader}>
+              <h2 id="link-modal-title" className={styles.linkModalTitle}>Ссылка</h2>
+              <button type="button" className={styles.linkModalClose} onClick={() => setLinkModalOpen(false)} aria-label="Закрыть">×</button>
+            </div>
+            <div className={styles.linkModalBody}>
+              <label className={styles.linkModalLabel}>Текст</label>
+              <input
+                type="text"
+                className={styles.linkModalInput}
+                value={linkModalText}
+                onChange={(e) => setLinkModalText(e.target.value)}
+                placeholder="текст ссылки"
+                autoFocus
+              />
+              <label className={styles.linkModalLabel}>Ссылка (URL)</label>
+              <input
+                type="url"
+                className={styles.linkModalInput}
+                value={linkModalHref}
+                onChange={(e) => setLinkModalHref(e.target.value)}
+                placeholder="https://..."
+              />
+            </div>
+            <div className={styles.linkModalFooter}>
+              <button type="button" className={styles.linkModalOk} onClick={applyLinkModal}>OK</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
