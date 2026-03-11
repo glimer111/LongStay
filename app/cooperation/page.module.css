@@ -38,12 +38,43 @@
   min-width: 280px;
   min-height: calc(100vh - 76px);
   overflow: hidden;
+  background: var(--card, #f0f0f0);
+}
+
+.heroLeft::before,
+.heroRight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: heroShimmer 1.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes heroShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroLeft::before,
+  .heroRight::before {
+    animation: none;
+  }
 }
 
 .heroLeft .heroImg,
 .heroRight .heroImg {
   position: absolute;
   inset: 0;
+  z-index: 1;
 }
 
 .heroCenter {
@@ -265,7 +296,7 @@
   aspect-ratio: 4/3;
   border-radius: 12px;
   overflow: hidden;
-  background: #fff;
+  background: var(--card, #f0f0f0);
   flex-shrink: 0;
   margin-bottom: 20px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);

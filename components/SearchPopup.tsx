@@ -49,8 +49,13 @@ export default function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
         <div className={styles.inputWrapper}>
             <div className={styles.pill}>
               <button
+                type="button"
                 className={styles.searchIcon}
-                onClick={handleSearch}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleSearch();
+                }}
                 aria-label="Search"
               >
                 <Image src="/icons/search-input.png" alt="" width={38} height={38} />
@@ -64,6 +69,23 @@ export default function SearchPopup({ isOpen, onClose }: SearchPopupProps) {
                 placeholder={t.search.placeholder}
                 className={styles.input}
               />
+              {query && (
+                <button
+                  type="button"
+                  className={styles.clearField}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQuery('');
+                    inputRef.current?.focus();
+                  }}
+                  aria-label="Очистить"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+                    <path d="M12 4L4 12M4 4l8 8" />
+                  </svg>
+                </button>
+              )}
             </div>
           <button
             className={styles.closeBtn}

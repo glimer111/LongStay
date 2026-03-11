@@ -6,11 +6,10 @@ import { removeDuplicateCaptionParagraphs } from '@/lib/sanitizeArticleHtml';
 import RichTextEditor from './RichTextEditor';
 import styles from './ArticleForm.module.css';
 
+/* Рубрики как на сайте, без «Все материалы» и «Полезное» */
 const CATEGORY_OPTIONS = [
   { value: 'interesting', labelRu: 'Это интересно' },
-  { value: 'useful', labelRu: 'Полезное' },
   { value: 'places', labelRu: 'Места' },
-  { value: 'excursions', labelRu: 'Экскурсии' },
   { value: 'food', labelRu: 'Еда' },
   { value: 'shopping', labelRu: 'Шопинг' },
   { value: 'events', labelRu: 'Мероприятия' },
@@ -177,7 +176,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
     <form className={styles.form} onSubmit={handleSubmit}>
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.row}>
-        <label>Slug (URL)</label>
+        <label>Ссылка на статью</label>
         <input
           name="slug"
           value={form.slug}
@@ -296,14 +295,14 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         </div>
       </div>
       <div className={styles.row}>
-        <label>
+        <label className={styles.rowLabelInline}>
           <input
             type="checkbox"
             name="published"
             checked={form.published}
             onChange={handleChange}
           />
-          {' '}Опубликовано
+          Опубликовано
         </label>
       </div>
       <div className={styles.row}>
@@ -316,7 +315,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         />
       </div>
       <button type="submit" disabled={loading}>
-        {loading ? 'Сохранение...' : isEdit ? 'Сохранить' : 'Создать статью'}
+        {loading ? 'Сохранение...' : isEdit ? 'Сохранить' : 'Опубликовать'}
       </button>
     </form>
   );

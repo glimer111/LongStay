@@ -15,23 +15,44 @@ export async function GET(request: NextRequest) {
   };
 
   if (q) {
-    const articles = await prisma.article.findMany({
-      where: {
-        AND: [
-          visibleWhere,
-          {
-            OR: [
-              { titleRu: { contains: q } },
-              { titleEn: { contains: q } },
-              { contentRu: { contains: q } },
-              { contentEn: { contains: q } },
-            ],
-          },
-        ],
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-    return Response.json({ articles });
+    const limit = Math.min(Number(searchParams.get('limit')) || 10, 50);
+    const offset = Math.max(0, Number(searchParams.get('offset')) || 0);
+    const [articles, total] = await Promise.all([
+      prisma.article.findMany({
+        where: {
+          AND: [
+            visibleWhere,
+            {
+              OR: [
+                { titleRu: { contains: q } },
+                { titleEn: { contains: q } },
+                { contentRu: { contains: q } },
+                { contentEn: { contains: q } },
+              ],
+            },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset,
+      }),
+      prisma.article.count({
+        where: {
+          AND: [
+            visibleWhere,
+            {
+              OR: [
+                { titleRu: { contains: q } },
+                { titleEn: { contains: q } },
+                { contentRu: { contains: q } },
+                { contentEn: { contains: q } },
+              ],
+            },
+          ],
+        },
+      }),
+    ]);
+    return Response.json({ articles, total, hasMore: offset + articles.length < total });
   }
 
   if (!city) {

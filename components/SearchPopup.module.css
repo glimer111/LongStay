@@ -44,15 +44,44 @@
   outline: none;
   font-size: 16px;
   background: transparent;
+  min-width: 0;
+}
+
+.clearField {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transition: color 0.2s, background 0.2s;
+}
+
+.clearField:hover {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .searchIcon {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 12px;
+  min-width: 48px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text);
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .searchIcon:hover {

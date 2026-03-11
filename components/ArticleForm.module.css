@@ -73,6 +73,19 @@
   margin: 0;
 }
 
+.rowLabelInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.rowLabelInline input {
+  width: auto;
+  margin: 0;
+}
+
 .imageUrlInput {
   margin-bottom: 0.5rem;
 }

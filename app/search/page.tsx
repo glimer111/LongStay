@@ -9,6 +9,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import styles from './page.module.css';
 
 const NO_RESULT_IMAGES = ['/images/NF1.png', '/images/NF2.png', '/images/NF3.png'];
+const SEARCH_PAGE_SIZE = 10;
 
 interface Article {
   id: string;
@@ -27,21 +28,41 @@ function SearchContent() {
   const { t, locale } = useLanguage();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const [inputValue, setInputValue] = useState(q);
 
   useEffect(() => {
     setInputValue(q);
     if (!q) {
       setArticles([]);
+      setHasMore(false);
       setLoading(false);
       return;
     }
     setLoading(true);
-    fetch(`/api/articles?q=${encodeURIComponent(q)}`)
+    fetch(`/api/articles?q=${encodeURIComponent(q)}&limit=${SEARCH_PAGE_SIZE}&offset=0`)
       .then((r) => r.json())
-      .then((data) => setArticles(data.articles || []))
+      .then((data) => {
+        setArticles(data.articles || []);
+        setHasMore(Boolean(data.hasMore));
+      })
       .finally(() => setLoading(false));
   }, [q]);
+
+  const loadMore = () => {
+    if (!q || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const offset = articles.length;
+    fetch(`/api/articles?q=${encodeURIComponent(q)}&limit=${SEARCH_PAGE_SIZE}&offset=${offset}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const next = data.articles || [];
+        setArticles((prev) => [...prev, ...next]);
+        setHasMore(Boolean(data.hasMore));
+      })
+      .finally(() => setLoadingMore(false));
+  };
 
   const articlesForLocale =
     locale === 'en'
@@ -173,11 +194,18 @@ function SearchContent() {
             ))}
           </div>
 
-          <div className={styles.footer}>
-            <button type="button" className={styles.moreBtn} disabled>
-              {t.articles.loadMore}
-            </button>
-          </div>
+          {hasMore && (
+            <div className={styles.footer}>
+              <button
+                type="button"
+                className={styles.moreBtn}
+                disabled={loadingMore}
+                onClick={loadMore}
+              >
+                {loadingMore ? '...' : t.articles.loadMore}
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

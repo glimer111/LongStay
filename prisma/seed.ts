@@ -22,11 +22,11 @@ async function main() {
     { slug: 'interesting', nameRu: 'Это интересно', nameEn: 'Interesting' },
     { slug: 'useful', nameRu: 'Полезное', nameEn: 'Useful' },
     { slug: 'places', nameRu: 'Места', nameEn: 'Places' },
-    { slug: 'excursions', nameRu: 'Экскурсии', nameEn: 'Excursions' },
     { slug: 'all', nameRu: 'Все материалы', nameEn: 'All materials' },
     { slug: 'food', nameRu: 'Еда', nameEn: 'Food' },
     { slug: 'shopping', nameRu: 'Шопинг', nameEn: 'Shopping' },
     { slug: 'events', nameRu: 'Мероприятия', nameEn: 'Events' },
+    { slug: 'excursions', nameRu: 'Экскурсии', nameEn: 'Excursions' },
   ];
 
   for (const city of cities) {

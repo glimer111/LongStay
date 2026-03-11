@@ -10,21 +10,18 @@ npm install
 
 После установки зависимостей выполните `npm run organize-assets` (если используете изображения из Figma).
 
-## Настройка базы данных
+## Настройка базы данных (локально)
 
-Проект использует **PostgreSQL** (подходит для Vercel, Neon и локальной разработки).
+Локально используется **SQLite** — ничего устанавливать не нужно. Файл `.env` уже с нужным `DATABASE_URL`.
 
-1. Создайте файл `.env` (если его нет). Укажите строку подключения к Postgres (например, из [Neon](https://neon.tech) или локальный сервер):
-```
-DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
-```
-
-2. Инициализируйте базу данных:
+Инициализируйте базу (один раз после клона):
 ```bash
 npx prisma generate
 npx prisma db push
 npx prisma db seed
 ```
+
+База создастся в `prisma/dev.db`. Для деплоя на Vercel используйте PostgreSQL (Neon) и смените в `prisma/schema.prisma` провайдер на `postgresql`.
 
 ## Запуск
 
