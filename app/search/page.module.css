@@ -1,0 +1,225 @@
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+.searchRow {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.searchPill {
+  width: min(1011px, 100%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--text);
+  border-radius: 40px;
+  padding: 18px 24px;
+  min-height: 77px;
+}
+
+.searchIcon {
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.closeIcon {
+  color: rgba(0,0,0,0.55);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.closeIcon:hover {
+  color: var(--pink);
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--muted);
+  margin: 18px 0 18px;
+  line-height: 115%;
+}
+
+.title strong {
+  color: var(--pink);
+  font-weight: 600;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 8px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover h3 {
+  color: var(--pink);
+}
+
+.thumb {
+  width: 300px;
+  height: 200px;
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card h3 {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 100%;
+  margin: 0 0 6px;
+  transition: color 0.2s;
+}
+
+.card p {
+  font-size: 30px;
+  line-height: 35px;
+  color: var(--muted);
+}
+
+.highlight {
+  color: var(--pink);
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 28px;
+}
+
+.moreBtn {
+  background: #EDE986;
+  border: none;
+  border-radius: var(--radius-pill);
+  min-width: 315px;
+  height: 52px;
+  padding: 0 24px;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 40px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.moreBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.loading,
+.noResults {
+  text-align: center;
+  padding: 64px 20px;
+  color: var(--muted);
+}
+
+.emptyBox {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+}
+
+.emptyCat {
+  width: 213px;
+  height: 218px;
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.emptyCatImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.emptyBox p {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--muted);
+  line-height: 115%;
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 20px 16px 48px;
+  }
+  .searchRow {
+    padding: 28px 0 14px;
+  }
+  .searchPill {
+    min-height: 56px;
+    padding: 12px 16px;
+  }
+  .title {
+    font-size: 20px;
+    margin: 14px 0;
+  }
+  .card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .thumb {
+    width: 100%;
+    height: 180px;
+  }
+  .card h3 {
+    font-size: 24px;
+  }
+  .card p {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .loading,
+  .noResults {
+    padding: 40px 16px;
+  }
+  .emptyBox {
+    gap: 16px;
+  }
+  .emptyCat {
+    width: 120px;
+    height: 120px;
+  }
+  .emptyBox p {
+    font-size: 20px;
+  }
+  .moreBtn {
+    min-width: 100%;
+    max-width: 320px;
+    height: 48px;
+    font-size: 20px;
+  }
+}

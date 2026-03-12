@@ -1,0 +1,40 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 196px;
+  height: 62px;
+  padding: 0 28px;
+  background: #EDE986;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: #333333;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 115%;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.button:hover {
+  filter: brightness(0.98);
+  transform: translateY(-2px);
+}
+
+.button:active {
+  filter: brightness(0.92);
+}
+
+@media (max-width: 720px) {
+  .button {
+    min-width: 100%;
+    max-width: 280px;
+    height: 56px;
+    font-size: 21px;
+  }
+  .button:active {
+    opacity: 0.88;
+    filter: brightness(1.08);
+  }
+}

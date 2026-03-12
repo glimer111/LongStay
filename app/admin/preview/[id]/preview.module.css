@@ -1,0 +1,53 @@
+.wrapper,
+.previewFrame {
+  min-height: 100%;
+}
+
+.message,
+.error {
+  padding: 1.5rem;
+  color: var(--text, #222);
+}
+
+.error {
+  color: #c00;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 10px 16px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 14px;
+}
+
+.barLabel {
+  font-weight: 600;
+}
+
+.back {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+.back:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.siteWrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}

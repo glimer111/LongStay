@@ -1,0 +1,77 @@
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+.title {
+  font-size: clamp(48px, 6vw, 100px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 40px;
+  text-align: center;
+  line-height: 115%;
+  color: var(--text);
+}
+
+.benefits {
+  margin-bottom: 48px;
+}
+
+.benefit {
+  margin-bottom: 32px;
+  padding: 28px 32px;
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.benefitTitle {
+  font-size: 25px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 40px;
+  color: var(--text);
+}
+
+.benefitText {
+  font-size: 15px;
+  line-height: 14px;
+  color: var(--text);
+}
+
+.cta {
+  text-align: center;
+  padding-top: 24px;
+}
+
+.ctaText {
+  font-size: clamp(24px, 2.5vw, 35px);
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: var(--text);
+  line-height: 115%;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 20px 16px 48px;
+  }
+  .title {
+    font-size: 36px;
+    margin-bottom: 32px;
+  }
+  .benefit {
+    padding: 20px 20px;
+  }
+  .benefitTitle {
+    font-size: 20px;
+  }
+}

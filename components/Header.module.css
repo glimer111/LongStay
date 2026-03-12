@@ -1,0 +1,493 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--header-shadow);
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+.headerPreview .navLink,
+.headerPreview .logoBlock {
+  cursor: default;
+  pointer-events: none;
+}
+
+.headerPreview .navLink:hover,
+.headerPreview .cooperationBtn:hover {
+  transform: none;
+  filter: none;
+}
+
+.headerPreview .cooperationBtn {
+  cursor: default;
+  pointer-events: none;
+}
+
+.headerPreview button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.container {
+  position: relative;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 29px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.logoBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-decoration: none;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.logoImg {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.logoMark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #EDE986;
+  border: 1px solid rgba(0,0,0,0.12);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.logo {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  text-align: center;
+  transform: translateX(-0.5px);
+  margin-top: -2px;
+}
+
+.logoBlock:hover .logo {
+  color: var(--pink);
+}
+
+/* On main page: no highlight on logo text */
+.headerHome .logoBlock:hover .logo,
+.headerHome .logoBlock:focus .logo,
+.headerHome .logoBlock:focus-visible .logo,
+.headerHome .logoBlock:active .logo {
+  color: var(--text);
+}
+
+.nav {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.navInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--pink);
+}
+
+.navLinkActive {
+  color: var(--text);
+}
+
+.navUnderline {
+  position: absolute;
+  bottom: -8px;
+  height: 2px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 2px;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease, left 0.3s ease, width 0.3s ease;
+}
+
+.navUnderlineVisible {
+  transform: scaleX(1);
+}
+
+.navUnderlineExiting {
+  transform: scaleX(0);
+}
+
+.navLinkActive:hover {
+  color: #F3619C;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.langWrapper {
+  position: relative;
+}
+
+.langBtn {
+  background: none;
+  border: 1px solid rgba(0,0,0,0.35);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: var(--radius-pill);
+  line-height: 1;
+}
+
+.langBtn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.langDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.langDropdown button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.langDropdown button:hover {
+  background: #FFFCEB;
+  color: #F3619C;
+}
+
+.langOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.searchBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--text);
+}
+
+.searchBtn:hover {
+  color: var(--pink);
+}
+
+.cooperationBtn {
+  background: #EDE986;
+  color: #333333;
+  padding: 14px 24px;
+  height: 52px;
+  min-width: 196px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 115%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.cooperationBtn:hover {
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+
+/* Hamburger (hidden on desktop) */
+.hamburgerBtn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.hamburgerBtn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.hamburgerBtn:hover {
+  color: var(--pink);
+}
+
+/* Mobile menu overlay & panel */
+@keyframes mobileMenuOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mobileMenuPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes mobileMenuLinkIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  justify-content: flex-end;
+  animation: mobileMenuOverlayIn 0.25s ease-out forwards;
+}
+
+.mobileMenuPanel {
+  width: min(300px, 82vw);
+  max-width: 100%;
+  height: 100%;
+  background: var(--bg);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+  padding: 24px 0 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: mobileMenuPanelIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  overflow-y: auto;
+}
+
+.mobileMenuClose {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin: 0 14px 8px 0;
+  color: var(--text);
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mobileMenuClose:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--pink);
+}
+
+.mobileMenuNav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 16px;
+}
+
+.mobileMenuLink {
+  display: block;
+  padding: 16px 20px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 12px;
+  margin: 0 12px 0 0;
+  transition: background 0.2s, color 0.2s;
+  border-left: 3px solid transparent;
+  animation: mobileMenuLinkIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.mobileMenuLink:nth-child(1) { animation-delay: 0.05s; }
+.mobileMenuLink:nth-child(2) { animation-delay: 0.1s; }
+.mobileMenuLink:nth-child(3) { animation-delay: 0.15s; }
+.mobileMenuLink:nth-child(4) { animation-delay: 0.2s; }
+.mobileMenuLink:nth-child(5) { animation-delay: 0.25s; }
+
+.mobileMenuLink:hover,
+.mobileMenuLink:focus-visible {
+  background: rgba(243, 97, 156, 0.08);
+  color: var(--pink);
+  border-left-color: var(--pink);
+}
+
+.mobileMenuLink:active {
+  opacity: 0.75;
+  background: rgba(243, 97, 156, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenuOverlay,
+  .mobileMenuPanel,
+  .mobileMenuLink {
+    animation: none;
+  }
+}
+
+/* Промежуточная ширина: уменьшаем нав и отступы, чтобы кнопка языка не наезжала на «Дубай» */
+@media (max-width: 1100px) {
+  .container {
+    padding: 0 16px;
+    gap: 1rem;
+  }
+
+  .navLink {
+    padding: 0 0.75rem;
+    font-size: 18px;
+  }
+
+  .cooperationBtn {
+    min-width: 160px;
+    padding: 12px 18px;
+    font-size: 18px;
+    height: 48px;
+  }
+
+  .actions {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 64px;
+  }
+
+  .container {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .logoBlock {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+
+  .logoBlock:focus,
+  .logoBlock:focus-visible,
+  .logoBlock:active {
+    outline: none;
+  }
+
+  .logoBlock:active .logo,
+  .logoBlock:focus .logo,
+  .logoBlock:focus-visible .logo {
+    color: var(--text);
+  }
+
+  .headerHome .logo {
+    color: var(--text);
+  }
+
+  .logoImg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .logo {
+    font-size: 9px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .cooperationBtn {
+    display: none;
+  }
+
+  .hamburgerBtn {
+    display: flex;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .nav {
+    gap: 14px;
+  }
+  .cooperationBtn {
+    padding: 8px 12px;
+  }
+}
