@@ -9,7 +9,7 @@ import { prisma } from '@/lib/prisma';
 // Рендер по запросу, чтобы сборка не требовала БД (таблицы создаются после деплоя через prisma db push)
 export const dynamic = 'force-dynamic';
 
-const READ_ALSO_LIMIT = 4;
+const READ_ALSO_LIMIT = 3;
 
 export default async function ArticlePage({
   params,
@@ -81,6 +81,11 @@ export default async function ArticlePage({
     return match;
   };
 
+  const categories = await prisma.category.findMany({
+    where: { city },
+    select: { slug: true, nameRu: true, nameEn: true },
+  });
+
   const relatedArticles = candidates
     .sort((a, b) => {
       const sa = score(a);
@@ -89,7 +94,7 @@ export default async function ArticlePage({
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     })
     .slice(0, READ_ALSO_LIMIT)
-    .map(({ id, slug, titleRu, titleEn, excerptRu, excerptEn, imageUrl }) => ({
+    .map(({ id, slug, titleRu, titleEn, excerptRu, excerptEn, imageUrl, category, categoryIds }) => ({
       id,
       slug,
       titleRu,
@@ -97,6 +102,8 @@ export default async function ArticlePage({
       excerptRu,
       excerptEn,
       imageUrl,
+      category,
+      categoryIds,
     }));
 
   const articleWithCleanEmbed = {
@@ -108,7 +115,7 @@ export default async function ArticlePage({
   return (
     <div className="article-page">
       <ArticleContent article={articleWithCleanEmbed} />
-      <ReadAlso city={city as City} articles={relatedArticles} />
+      <ReadAlso city={city as City} articles={relatedArticles} categories={categories} />
       <SocialLinks city={city as City} />
     </div>
   );

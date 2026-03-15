@@ -13,16 +13,44 @@ export interface ReadAlsoArticle {
   excerptRu: string | null;
   excerptEn: string | null;
   imageUrl: string | null;
+  category: string;
+  categoryIds: string | null;
+}
+
+export interface ReadAlsoCategory {
+  slug: string;
+  nameRu: string;
+  nameEn: string;
 }
 
 interface ReadAlsoProps {
   city: City;
   articles: ReadAlsoArticle[];
+  categories: ReadAlsoCategory[];
 }
 
-const PLACEHOLDER_IMAGE = '/images/placeholder-article.jpg';
+function getArticleCategoryNames(
+  a: ReadAlsoArticle,
+  categories: ReadAlsoCategory[],
+  locale: string
+): string[] {
+  const slugs: string[] = [a.category];
+  if (a.categoryIds) {
+    try {
+      const ids = JSON.parse(a.categoryIds) as string[];
+      slugs.push(...ids.filter((s) => s && s !== 'all'));
+    } catch {
+      /* ignore */
+    }
+  }
+  const unique = Array.from(new Set(slugs));
+  return unique.map((slug) => {
+    const cat = categories.find((c) => c.slug === slug);
+    return cat ? (locale === 'ru' ? cat.nameRu : cat.nameEn) : slug;
+  });
+}
 
-export default function ReadAlso({ city, articles }: ReadAlsoProps) {
+export default function ReadAlso({ city, articles, categories }: ReadAlsoProps) {
   const { locale, t } = useLanguage();
 
   if (!articles.length) return null;
@@ -36,17 +64,26 @@ export default function ReadAlso({ city, articles }: ReadAlsoProps) {
         {articles.map((a) => {
           const title = locale === 'ru' ? a.titleRu : (a.titleEn || a.titleRu);
           const excerpt = locale === 'ru' ? (a.excerptRu || '') : (a.excerptEn || a.excerptRu || '');
+          const categoryNames = getArticleCategoryNames(a, categories, locale);
+          const useHashtags = categoryNames.length > 3;
           const href = `/${city}/${a.slug}`;
           return (
             <Link key={a.id} href={href} className={styles.card}>
-              <div className={styles.imageWrap}>
-                {a.imageUrl ? (
-                  <img src={a.imageUrl} alt="" className={styles.image} />
-                ) : (
-                  <div className={styles.imagePlaceholder} />
-                )}
-              </div>
+              {a.imageUrl ? (
+                <div className={styles.image}>
+                  <img src={a.imageUrl} alt="" />
+                </div>
+              ) : (
+                <div className={styles.imagePlaceholder} />
+              )}
               <div className={styles.cardContent}>
+                <div className={styles.cardCategoryWrap}>
+                  {categoryNames.map((name) => (
+                    <span key={name} className={styles.cardCategoryTag}>
+                      {useHashtags ? `#${name.replace(/\s+/g, '_')}` : name}
+                    </span>
+                  ))}
+                </div>
                 <h3 className={styles.title}>{title}</h3>
                 {excerpt && <p className={styles.excerpt}>{excerpt}</p>}
                 <span className={styles.read}>{t.city.read}</span>
