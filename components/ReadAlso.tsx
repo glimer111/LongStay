@@ -69,12 +69,10 @@ export default function ReadAlso({ city, articles, categories }: ReadAlsoProps) 
           const href = `/${city}/${a.slug}`;
           return (
             <Link key={a.id} href={href} className={styles.card}>
-              {a.imageUrl ? (
+              {a.imageUrl && (
                 <div className={styles.image}>
                   <img src={a.imageUrl} alt="" />
                 </div>
-              ) : (
-                <div className={styles.imagePlaceholder} />
               )}
               <div className={styles.cardContent}>
                 <div className={styles.cardCategoryWrap}>
