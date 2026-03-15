@@ -78,7 +78,7 @@ export default function CityArticles({ city }: { city: City }) {
   const filteredArticles = showAllMaterials
     ? articlesForLocale
     : articlesForLocale.filter((a) =>
-        [...selectedCategories].some((slug) => articleHasCategory(a, slug))
+        Array.from(selectedCategories).some((slug) => articleHasCategory(a, slug))
       );
 
   const displayedArticles = filteredArticles.slice(0, displayCount);
@@ -94,7 +94,7 @@ export default function CityArticles({ city }: { city: City }) {
     if (ids) {
       try {
         const arr = JSON.parse(ids) as string[];
-        slugs = [...new Set([primary, ...arr].filter((s) => s && s !== 'all'))];
+        slugs = Array.from(new Set([primary, ...arr].filter((s) => s && s !== 'all')));
       } catch {
         /* keep primary only */
       }
