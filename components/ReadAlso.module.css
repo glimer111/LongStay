@@ -1,6 +1,6 @@
-/* Секция «Читать так же» */
+/* Секция «Читать так же» — ширина как на странице города, чтобы карточки не сжимались */
 .section {
-  max-width: 720px;
+  max-width: var(--container, 1200px);
   margin: 48px auto 0;
   padding: 32px 24px 80px;
   border-top: 1px solid var(--border, #eee);
