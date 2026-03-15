@@ -107,11 +107,34 @@
 
 @media (max-width: 720px) {
   .section {
-    padding: 24px 16px 64px;
+    padding: 24px 0 64px;
+  }
+  .heading {
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 16px 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .grid::-webkit-scrollbar {
+    height: 6px;
+  }
+  .grid::-webkit-scrollbar-thumb {
+    background: var(--border, #ddd);
+    border-radius: 3px;
+  }
+  .card {
+    flex: 0 0 280px;
+    min-width: 280px;
+    scroll-snap-align: start;
   }
   .cardContent {
     padding: 16px;
