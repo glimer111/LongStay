@@ -26,7 +26,14 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [imageUploading, setImageUploading] = useState(false);
+  const [showSavedToast, setShowSavedToast] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!showSavedToast) return;
+    const t = setTimeout(() => setShowSavedToast(false), 2500);
+    return () => clearTimeout(t);
+  }, [showSavedToast]);
   const parseArray = (v: unknown): string[] => {
     if (Array.isArray(v) && v.every((x) => typeof x === 'string')) return v;
     if (typeof v === 'string') try { return JSON.parse(v); } catch { return v ? [v] : []; }
@@ -164,6 +171,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         setError(data.error || text.slice(0, 200) || `Ошибка ${res.status}`);
         return;
       }
+      setShowSavedToast(true);
       onSuccess(isEdit ? undefined : (data.id ? { id: String(data.id) } : undefined));
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Ошибка сети';
@@ -174,8 +182,14 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      {error && <p className={styles.error}>{error}</p>}
+    <>
+      {showSavedToast && (
+        <div className={styles.savedToast} role="status" aria-live="polite">
+          Сохранено
+        </div>
+      )}
+      <form className={styles.form} onSubmit={handleSubmit}>
+        {error && <p className={styles.error}>{error}</p>}
       <div className={styles.row}>
         <label>Ссылка на статью</label>
         <input
@@ -315,9 +329,10 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
           onChange={handleChange}
         />
       </div>
-      <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading}>
         {loading ? 'Сохранение...' : isEdit ? 'Сохранить' : 'Опубликовать'}
       </button>
     </form>
+    </>
   );
 }

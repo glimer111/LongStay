@@ -21,7 +21,13 @@ export default function AdminLoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      let data: { error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        if (!res.ok) setError(`Ошибка сервера (${res.status})`);
+        return;
+      }
       if (!res.ok) {
         setError(data.error || 'Ошибка входа');
         return;

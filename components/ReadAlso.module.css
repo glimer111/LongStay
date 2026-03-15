@@ -16,14 +16,20 @@
 
 .grid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
 }
 
 .card {
+  flex: 0 0 260px;
   width: 260px;
-  max-width: 100%;
+  scroll-snap-align: start;
   text-decoration: none;
   color: var(--text, #111);
   background: var(--card, #fff);
@@ -101,8 +107,20 @@
 @media (max-width: 640px) {
   .section {
     padding-bottom: 64px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .heading {
     font-size: 36px;
+  }
+  .grid {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .card {
+    flex: 0 0 220px;
+    width: 220px;
   }
 }

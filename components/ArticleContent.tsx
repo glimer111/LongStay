@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { removeDuplicateCaptionParagraphs } from '@/lib/sanitizeArticleHtml';
-import Image from 'next/image';
+import {
+  normalizeEmbedHtml,
+  parseEmbedSegments,
+  isInstagramSrc,
+  getSafeEmbedLinkHref,
+  getInstagramEmbedUrl,
+  isEmbedSrcInvalid,
+  type EmbedSegment,
+} from '@/lib/embed';
 import styles from './ArticleContent.module.css';
-
-type ContentSegment =
-  | { type: 'html'; content: string }
-  | { type: 'embed'; src: string };
 
 interface Article {
   titleRu: string;
@@ -25,9 +29,7 @@ function normalizeArticleContent(html: string): string {
   let out = removeDuplicateCaptionParagraphs(html);
   const div = document.createElement('div');
   div.innerHTML = out;
-
   const toArray = (list: NodeListOf<Element> | HTMLCollectionOf<Element>) => Array.from(list);
-
   toArray(div.children).forEach((child) => {
     if (child.tagName !== 'P') return;
     const img = child.querySelector('img');
@@ -55,45 +57,13 @@ function normalizeArticleContent(html: string): string {
     next1?.remove();
     if (p2Text) next2?.remove();
   });
-
   return div.innerHTML;
-}
-
-/** Если в src попал HTML/атрибуты — оставляет только первый валидный https-URL. */
-function cleanEmbedSrc(raw: string): string {
-  const t = raw.trim();
-  if (!t.includes('<') && !t.includes('width=') && /^https?:\/\/[^\s"']+$/i.test(t)) return t;
-  const m = t.match(/https?:\/\/[^\s"'<>]+/i);
-  return m ? m[0] : t;
-}
-
-/** Извлекает блоки embed и src из HTML по строке (без innerHTML, чтобы браузер не трогал iframe). */
-function parseSegmentsFromHtml(html: string): ContentSegment[] {
-  const segs: ContentSegment[] = [];
-  const regex = /<div[^>]*class="[^"]*article-embed[^"]*"[^>]*>[\s\S]*?<iframe[\s\S]*?src=["']([^"']+)["'][\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi;
-  let lastIndex = 0;
-  let match;
-  while ((match = regex.exec(html)) !== null) {
-    if (match.index > lastIndex) {
-      segs.push({ type: 'html', content: html.slice(lastIndex, match.index) });
-    }
-    const src = cleanEmbedSrc(match[1] || '');
-    if (src && /^https?:\/\//i.test(src)) {
-      segs.push({ type: 'embed', src });
-    } else {
-      segs.push({ type: 'html', content: match[0] });
-    }
-    lastIndex = regex.lastIndex;
-  }
-  if (lastIndex < html.length) {
-    segs.push({ type: 'html', content: html.slice(lastIndex) });
-  }
-  return segs.length > 0 ? segs : [{ type: 'html', content: html }];
 }
 
 export default function ArticleContent({ article }: { article: Article }) {
   const { locale, setLocale, t } = useLanguage();
-  const hasEnglish = (article.titleEn != null && String(article.titleEn).trim() !== '') &&
+  const hasEnglish =
+    (article.titleEn != null && String(article.titleEn).trim() !== '') &&
     (article.contentEn != null && String(article.contentEn).trim() !== '');
 
   if (locale === 'en' && !hasEnglish) {
@@ -114,49 +84,54 @@ export default function ArticleContent({ article }: { article: Article }) {
   const title = locale === 'ru' ? article.titleRu : (article.titleEn || article.titleRu);
   const excerpt = locale === 'ru' ? article.excerptRu : (article.excerptEn || article.excerptRu);
   const rawContent = locale === 'ru' ? article.contentRu : (article.contentEn || article.contentRu);
+
   const [content, setContent] = useState(rawContent);
-  const [segments, setSegments] = useState<ContentSegment[] | null>(null);
+  const [segments, setSegments] = useState<EmbedSegment[] | null>(() =>
+    parseEmbedSegments(normalizeEmbedHtml(rawContent))
+  );
 
   useEffect(() => {
-    const normalized = typeof document !== 'undefined' ? normalizeArticleContent(rawContent) : rawContent;
-    setContent(normalized);
-    setSegments(parseSegmentsFromHtml(normalized));
+    const normalized =
+      typeof document !== 'undefined' ? normalizeArticleContent(rawContent) : rawContent;
+    const withEmbed = normalizeEmbedHtml(normalized);
+    setContent(withEmbed);
+    setSegments(parseEmbedSegments(withEmbed));
   }, [rawContent]);
 
-  const renderContent = () => {
-    if (segments !== null && segments.length > 0) {
+  const renderSegment = (seg: EmbedSegment, i: number) => {
+    if (seg.type === 'embed') {
+      const safeSrc = isEmbedSrcInvalid(seg.src) ? '' : seg.src;
+      const embedUrl = isInstagramSrc(seg.src) ? getInstagramEmbedUrl(seg.src) : safeSrc;
+      if (!embedUrl || embedUrl === 'about:blank') return null;
+      const isInstagram = isInstagramSrc(seg.src);
+      const align = (seg.type === 'embed' && (seg.align === 'left' || seg.align === 'right')) ? seg.align : 'center';
       return (
-        <div className={styles.content}>
-          {segments.map((seg, i) =>
-            seg.type === 'embed' ? (
-              <div key={i} className={styles.embedBlock}>
-                <div className={styles.embedVideoWrap}>
-                  <iframe
-                    src={seg.src}
-                    className={styles.embedIframe}
-                    title="Встроенное содержимое"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-                <a
-                  href={seg.src}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.embedFallbackLink}
-                >
-                  Открыть в новой вкладке
-                </a>
-              </div>
-            ) : (
-              <div key={i} style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: seg.content }} />
-            )
-          )}
+        <div key={i} className={`${styles.embedBlock} ${styles[`embedBlock${align === 'left' ? 'Left' : align === 'right' ? 'Right' : 'Center'}`]}`}>
+          <div className={isInstagram ? `${styles.embedVideoWrap} ${styles.embedVideoWrapInstagram}` : styles.embedVideoWrap}>
+            <iframe
+              src={embedUrl}
+              className={styles.embedIframe}
+              title="Instagram"
+              allow="encrypted-media"
+            />
+          </div>
         </div>
       );
     }
     return (
-      <div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
+      <div key={i} style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: seg.content }} />
+    );
+  };
+
+  const renderContent = () => {
+    if (segments != null && segments.length > 0) {
+      return <div className={styles.content}>{segments.map(renderSegment)}</div>;
+    }
+    return (
+      <div
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: normalizeEmbedHtml(content) }}
+      />
     );
   };
 

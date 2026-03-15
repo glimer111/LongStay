@@ -144,6 +144,7 @@
   line-height: 100%;
   margin-bottom: 8px;
   transition: color 0.2s;
+  white-space: pre-line;
 }
 
 .excerpt {

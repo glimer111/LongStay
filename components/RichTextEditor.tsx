@@ -114,6 +114,28 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     editor?.chain().focus().insertContent({ type: 'embed', attrs: { src } }).run();
   };
 
+  const [instagramModalOpen, setInstagramModalOpen] = useState(false);
+  const [instagramModalCode, setInstagramModalCode] = useState('');
+
+  const addInstagramEmbed = () => {
+    setImageMenuOpen(false);
+    setInstagramModalCode('');
+    setInstagramModalOpen(true);
+  };
+
+  const applyInstagramEmbed = () => {
+    const raw = instagramModalCode.trim();
+    const srcRaw = extractSrcFromPaste(raw);
+    const src = srcRaw ? (normalizeEmbedUrl(raw) || (srcRaw.startsWith('http') ? srcRaw : '')) : '';
+    if (!src || !/instagram\.com\/p\//i.test(src)) {
+      alert('Вставьте код из Instagram: нажмите «Копировать код вставки» в диалоге поста и вставьте сюда.');
+      return;
+    }
+    editor?.chain().focus().insertContent({ type: 'embed', attrs: { src } }).run();
+    setInstagramModalOpen(false);
+    setInstagramModalCode('');
+  };
+
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [imageMenuOpen, setImageMenuOpen] = useState(false);
@@ -417,6 +439,9 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         <button type="button" onClick={addEmbed} title="Вставить embed (YouTube, Vimeo и др.)">
           📺
         </button>
+        <button type="button" onClick={addInstagramEmbed} title="Вставить пост Instagram">
+          Instagram
+        </button>
       </div>
       <EditorContent editor={editor} className={styles.editor} />
 
@@ -448,6 +473,35 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
             </div>
             <div className={styles.linkModalFooter}>
               <button type="button" className={styles.linkModalOk} onClick={applyLinkModal}>OK</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {instagramModalOpen && (
+        <div className={styles.linkModalOverlay} onClick={() => setInstagramModalOpen(false)} role="dialog" aria-modal="true" aria-labelledby="instagram-modal-title">
+          <div className={styles.linkModal} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '560px' }}>
+            <div className={styles.linkModalHeader}>
+              <h2 id="instagram-modal-title" className={styles.linkModalTitle}>Вставить пост Instagram</h2>
+              <button type="button" className={styles.linkModalClose} onClick={() => setInstagramModalOpen(false)} aria-label="Закрыть">×</button>
+            </div>
+            <div className={styles.linkModalBody} style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+              <label className={styles.linkModalLabel}>
+                Вставьте сюда код из Instagram (кнопка «Копировать код вставки» в диалоге поста)
+              </label>
+              <textarea
+                className={styles.instagramCodeInput}
+                value={instagramModalCode}
+                onChange={(e) => setInstagramModalCode(e.target.value)}
+                placeholder='<blockquote class="instagram-media" data-instgrm-permalink="...">...</blockquote>'
+                rows={6}
+                autoFocus
+              />
+            </div>
+            <div className={styles.linkModalFooter}>
+              <button type="button" className={styles.linkModalOk} onClick={applyInstagramEmbed}>
+                Вставить пост
+              </button>
             </div>
           </div>
         </div>

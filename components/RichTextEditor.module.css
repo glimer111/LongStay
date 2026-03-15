@@ -204,6 +204,37 @@
   overflow: hidden;
 }
 
+.editor :global(.ProseMirror .article-embed--left) {
+  float: left;
+  width: auto;
+  max-width: 100%;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.editor :global(.ProseMirror .article-embed--center) {
+  float: none;
+  clear: both;
+  width: max-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editor :global(.ProseMirror .article-embed--right) {
+  float: right;
+  width: auto;
+  max-width: 100%;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* У блока с Instagram iframe — без лишнего фона */
+.editor :global(.ProseMirror .article-embed:has(.article-embed-iframe-instagram)) {
+  min-height: 0;
+  background: transparent;
+}
+
 .editor :global(.ProseMirror .article-embed--empty) {
   padding: 1.5rem;
   min-height: 0;
@@ -220,6 +251,13 @@
   aspect-ratio: 16 / 9;
   border: none;
   border-radius: 12px;
+}
+
+/* Пост Instagram в редакторе — пропорции как на сайте */
+.editor :global(.ProseMirror .article-embed-iframe-instagram) {
+  aspect-ratio: 1 / 1.65;
+  max-width: 540px;
+  min-height: 400px;
 }
 
 .editor :global(.ProseMirror a) {
@@ -358,6 +396,26 @@
   border-color: var(--pink);
   box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.15);
 }
+
+.instagramCodeInput {
+  width: 100%;
+  min-height: 140px;
+  padding: 10px 12px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.instagramCodeInput:focus {
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.15);
+}
+
 .linkModalFooter {
   padding: 12px 20px 20px;
 }

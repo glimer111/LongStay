@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { CITIES, type City } from '@/lib/constants';
+import { normalizeEmbedHtml } from '@/lib/embed';
 import ArticleContent from '@/components/ArticleContent';
 import ReadAlso from '@/components/ReadAlso';
 import SocialLinks from '@/components/SocialLinks';
@@ -33,7 +34,17 @@ export default async function ArticlePage({
   const articleCities = article.cityIds ? (JSON.parse(article.cityIds) as string[]) : [article.city];
   if (!articleCities.includes(city)) notFound();
 
-  const relatedArticles = await prisma.article.findMany({
+  // Категории текущей статьи для рекомендаций
+  const currentCategories = new Set<string>([article.category]);
+  if (article.categoryIds) {
+    try {
+      (JSON.parse(article.categoryIds) as string[]).forEach((c) => currentCategories.add(c));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const candidates = await prisma.article.findMany({
     where: {
       id: { not: article.id },
       city,
@@ -42,7 +53,7 @@ export default async function ArticlePage({
       OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
     },
     orderBy: { createdAt: 'desc' },
-    take: READ_ALSO_LIMIT,
+    take: 24,
     select: {
       id: true,
       slug: true,
@@ -51,12 +62,52 @@ export default async function ArticlePage({
       excerptRu: true,
       excerptEn: true,
       imageUrl: true,
+      category: true,
+      categoryIds: true,
+      createdAt: true,
     },
   });
 
+  const score = (a: { category: string; categoryIds: string | null }) => {
+    let match = currentCategories.has(a.category) ? 2 : 0;
+    if (a.categoryIds) {
+      try {
+        const ids = JSON.parse(a.categoryIds) as string[];
+        match += ids.filter((c) => currentCategories.has(c)).length;
+      } catch {
+        /* ignore */
+      }
+    }
+    return match;
+  };
+
+  const relatedArticles = candidates
+    .sort((a, b) => {
+      const sa = score(a);
+      const sb = score(b);
+      if (sb !== sa) return sb - sa;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+    .slice(0, READ_ALSO_LIMIT)
+    .map(({ id, slug, titleRu, titleEn, excerptRu, excerptEn, imageUrl }) => ({
+      id,
+      slug,
+      titleRu,
+      titleEn,
+      excerptRu,
+      excerptEn,
+      imageUrl,
+    }));
+
+  const articleWithCleanEmbed = {
+    ...article,
+    contentRu: normalizeEmbedHtml(article.contentRu ?? ''),
+    contentEn: article.contentEn ? normalizeEmbedHtml(article.contentEn) : null,
+  };
+
   return (
     <div className="article-page">
-      <ArticleContent article={article} />
+      <ArticleContent article={articleWithCleanEmbed} />
       <ReadAlso city={city as City} articles={relatedArticles} />
       <SocialLinks city={city as City} />
     </div>

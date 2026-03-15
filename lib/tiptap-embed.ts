@@ -12,15 +12,20 @@ function ensureAbsoluteUrl(url: string): string {
   return 'https://' + t;
 }
 
-/** Если вставлен код iframe/HTML — извлекает только значение src (один чистый URL). Экспортируется для обработки вставки из буфера. */
+/** Извлекает URL из вставленного HTML: iframe src или data-instgrm-permalink (Instagram blockquote). */
 export function extractSrcFromPaste(input: string): string | null {
   const t = input.trim();
   if (!t) return null;
   if (/^https?:\/\//i.test(t) && !t.includes('<') && !t.includes('>')) return null;
-  const match = t.match(/src\s*=\s*["']([^"']+)["']/i);
-  if (match && match[1]) {
-    const src = match[1].trim();
+  const iframeMatch = t.match(/src\s*=\s*["']([^"']+)["']/i);
+  if (iframeMatch?.[1]) {
+    const src = iframeMatch[1].trim();
     if (/^https?:\/\//i.test(src)) return src;
+  }
+  const instagramMatch = t.match(/data-instgrm-permalink\s*=\s*["']([^"']+)["']/i);
+  if (instagramMatch?.[1]) {
+    const url = instagramMatch[1].trim().replace(/&amp;/g, '&');
+    if (/instagram\.com\/p\/[^/]+/i.test(url)) return url;
   }
   return null;
 }
@@ -62,6 +67,12 @@ export function normalizeEmbedUrl(url: string): string {
       return id ? `https://player.vimeo.com/video/${id}` : absolute;
     }
 
+    // Instagram: instagram.com/p/XXX -> instagram.com/p/XXX/embed/
+    if (/^(www\.)?instagram\.com$/i.test(u.hostname) && u.pathname && /^\/p\/[^/]+\/?$/i.test(u.pathname)) {
+      const code = u.pathname.replace(/^\//, '').replace(/\/$/, ''); // p/XXX
+      return `https://www.instagram.com/${code}/embed/`;
+    }
+
     // Уже embed-подобный или любой https — возвращаем абсолютный URL
     if (u.protocol === 'https:' || u.protocol === 'http:') return absolute;
   } catch {
@@ -91,6 +102,17 @@ export const Embed = Node.create({
         },
         renderHTML: () => ({}),
       },
+      align: {
+        default: 'center' as 'left' | 'center' | 'right',
+        parseHTML: (el) => {
+          const wrap = (el as HTMLElement).closest?.('.article-embed');
+          const cls = wrap?.className ?? '';
+          if (typeof cls === 'string' && cls.includes('article-embed--left')) return 'left';
+          if (typeof cls === 'string' && cls.includes('article-embed--right')) return 'right';
+          return 'center';
+        },
+        renderHTML: () => ({}),
+      },
     };
   },
 
@@ -102,7 +124,12 @@ export const Embed = Node.create({
           const div = dom as HTMLElement;
           const iframe = div.querySelector('iframe');
           const src = iframe?.getAttribute('src')?.trim();
-          return src ? { src } : false;
+          if (!src) return false;
+          const cls = div.className ?? '';
+          let align: 'left' | 'center' | 'right' = 'center';
+          if (typeof cls === 'string' && cls.includes('article-embed--left')) align = 'left';
+          else if (typeof cls === 'string' && cls.includes('article-embed--right')) align = 'right';
+          return { src, align };
         },
       },
     ];
@@ -110,12 +137,14 @@ export const Embed = Node.create({
 
   renderHTML({ node }) {
     const src = node.attrs.src != null ? String(node.attrs.src).trim() : '';
+    const align = (node.attrs.align === 'left' || node.attrs.align === 'right') ? node.attrs.align : 'center';
+    const embedClass = `article-embed article-embed--${align}`;
     if (!src) {
-      return ['div', { class: 'article-embed article-embed--empty' }, ['span', {}, 'Вставьте ссылку на embed']];
+      return ['div', { class: embedClass + ' article-embed--empty' }, ['span', {}, 'Вставьте ссылку на embed']];
     }
     return [
       'div',
-      { class: 'article-embed' },
+      { class: embedClass },
       ['iframe', { src, class: 'article-embed-iframe', title: 'Встроенное содержимое' }],
     ];
   },
