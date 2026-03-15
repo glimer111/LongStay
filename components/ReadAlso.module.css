@@ -105,9 +105,11 @@
   object-fit: cover;
 }
 
+/* Мобильная версия — горизонтальный скролл как в блоке «Почему наша реклама работает?» */
 @media (max-width: 720px) {
   .section {
     padding: 24px 0 64px;
+    overflow: hidden;
   }
   .heading {
     padding-left: 16px;
@@ -119,22 +121,22 @@
     flex-wrap: nowrap;
     gap: 16px;
     overflow-x: auto;
-    overflow-y: hidden;
-    padding: 0 16px 8px;
-    scroll-snap-type: x proximity;
+    overflow-y: visible;
+    padding: 0 6vw 24px;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    justify-content: flex-start;
   }
   .grid::-webkit-scrollbar {
-    height: 6px;
-  }
-  .grid::-webkit-scrollbar-thumb {
-    background: var(--border, #ddd);
-    border-radius: 3px;
+    display: none;
   }
   .card {
-    flex: 0 0 280px;
-    min-width: 280px;
-    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 88vw;
+    max-width: 340px;
+    scroll-snap-align: center;
   }
   .cardContent {
     padding: 16px;
