@@ -5,7 +5,25 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
-const MAX_SIZE = 4.5 * 1024 * 1024; // 4.5 MB (Vercel serverless body limit)
+
+const MAX_SIZE_VERCEL = 4.5 * 1024 * 1024; // 4.5 MB — лимит body у serverless-функций Vercel
+const MAX_SIZE_LOCAL = 15 * 1024 * 1024; // 15 MB — более щедрый лимит для собственного сервера
+
+function getLocalUploadConfig() {
+  // Путь на диске, куда можно писать (по умолчанию public/uploads внутри проекта)
+  const dir =
+    process.env.UPLOAD_DIR && process.env.UPLOAD_DIR.trim()
+      ? process.env.UPLOAD_DIR.trim()
+      : path.join(process.cwd(), 'public', 'uploads');
+
+  // Базовый URL, по которому эти файлы отдаются nginx/Node (по умолчанию /uploads)
+  const publicBase =
+    process.env.UPLOAD_PUBLIC_BASE && process.env.UPLOAD_PUBLIC_BASE.trim()
+      ? process.env.UPLOAD_PUBLIC_BASE.trim().replace(/\/$/, '')
+      : '/uploads';
+
+  return { dir, publicBase };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,8 +43,15 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: 'Разрешены только изображения (JPEG, PNG, GIF, WebP)' }, { status: 400 });
     }
 
-    if (file.size > MAX_SIZE) {
-      return Response.json({ error: 'Размер файла не более 4.5 МБ' }, { status: 400 });
+    const useBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+    const sizeLimit = useBlob ? MAX_SIZE_VERCEL : MAX_SIZE_LOCAL;
+    if (file.size > sizeLimit) {
+      return Response.json(
+        {
+          error: `Размер файла не более ${Math.round(sizeLimit / (1024 * 1024))} МБ`,
+        },
+        { status: 400 },
+      );
     }
 
     const name = typeof (file as Blob & { name?: string }).name === 'string' ? (file as Blob & { name: string }).name : '';
@@ -38,7 +63,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // На Vercel (и при наличии BLOB_READ_WRITE_TOKEN) — сохраняем в Vercel Blob
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    if (useBlob) {
       const blob = await put(safeName, buffer, {
         access: 'public',
         contentType: type || undefined,
@@ -47,12 +72,14 @@ export async function POST(request: NextRequest) {
       return Response.json({ url: blob.url });
     }
 
-    // Локальная разработка — сохраняем в public/uploads
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    await mkdir(uploadDir, { recursive: true });
-    const filePath = path.join(uploadDir, path.basename(safeName));
+    // Собственный сервер / локальная разработка — сохраняем на диск
+    const { dir, publicBase } = getLocalUploadConfig();
+    await mkdir(dir, { recursive: true });
+    const filePath = path.join(dir, path.basename(safeName));
     await writeFile(filePath, buffer);
-    return Response.json({ url: `/uploads/${path.basename(safeName)}` });
+
+    const publicUrl = `${publicBase}/${path.basename(safeName)}`;
+    return Response.json({ url: publicUrl });
   } catch (err) {
     console.error('Upload error:', err);
     const message = err instanceof Error ? err.message : 'Ошибка загрузки';

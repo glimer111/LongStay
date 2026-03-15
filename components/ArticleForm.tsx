@@ -17,7 +17,8 @@ const CATEGORY_OPTIONS = [
 
 interface ArticleFormProps {
   article?: Record<string, unknown>;
-  onSuccess: () => void;
+  /** После успешного сохранения: при создании передаётся { id } созданной статьи. */
+  onSuccess: (data?: { id: string }) => void;
 }
 
 export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
@@ -150,7 +151,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         }),
       });
       const text = await res.text();
-      let data: { error?: string } = {};
+      let data: { error?: string; id?: string } = {};
       try {
         if (text) data = JSON.parse(text);
       } catch {
@@ -163,7 +164,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
         setError(data.error || text.slice(0, 200) || `Ошибка ${res.status}`);
         return;
       }
-      onSuccess();
+      onSuccess(isEdit ? undefined : (data.id ? { id: String(data.id) } : undefined));
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Ошибка сети';
       setError(msg === 'Failed to fetch' ? 'Нет связи с сервером. Проверьте интернет и что сервер запущен.' : msg);
@@ -271,7 +272,7 @@ export default function ArticleForm({ article, onSuccess }: ArticleFormProps) {
           name="imageUrl"
           value={form.imageUrl}
           onChange={handleChange}
-          type="url"
+          type="text"
           placeholder="URL или загрузите файл"
           className={styles.imageUrlInput}
         />

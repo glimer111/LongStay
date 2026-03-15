@@ -34,6 +34,17 @@ export const ImageFigure = Image.extend({
         },
         renderHTML: () => ({}),
       },
+      align: {
+        default: 'center' as 'left' | 'center' | 'right',
+        parseHTML: (el) => {
+          const fig = (el as HTMLElement).closest?.('figure');
+          if (!fig?.classList) return 'center';
+          if (fig.classList.contains('article-figure--left')) return 'left';
+          if (fig.classList.contains('article-figure--right')) return 'right';
+          return 'center';
+        },
+        renderHTML: () => ({}),
+      },
     };
   },
 
@@ -66,7 +77,11 @@ export const ImageFigure = Image.extend({
           const fig = dom as HTMLElement;
           const img = fig.querySelector('img');
           if (!img) return false;
-          return getAttrsFromImg(img);
+          const base = getAttrsFromImg(img) as Record<string, unknown>;
+          let align: 'left' | 'center' | 'right' = 'center';
+          if (fig.classList?.contains('article-figure--left')) align = 'left';
+          else if (fig.classList?.contains('article-figure--right')) align = 'right';
+          return { ...base, align };
         },
       },
       {
@@ -80,6 +95,8 @@ export const ImageFigure = Image.extend({
     const capA = (node.attrs.captionAttribution ?? '').trim() || null;
     const capD = (node.attrs.captionDescription ?? '').trim() || null;
     const src = node.attrs.src != null ? String(node.attrs.src) : '';
+    const align = (node.attrs.align === 'left' || node.attrs.align === 'right') ? node.attrs.align : 'center';
+    const figureClass = `article-figure article-figure--${align}`;
     const imgAttrs: Record<string, string> = {
       ...this.options.HTMLAttributes,
       src: src || '',
@@ -89,11 +106,11 @@ export const ImageFigure = Image.extend({
     const img = ['img', imgAttrs];
     const hasCaption = !!(capA || capD);
     if (!hasCaption) {
-      return ['figure', { class: 'article-figure' }, img];
+      return ['figure', { class: figureClass }, img];
     }
     return [
       'figure',
-      { class: 'article-figure' },
+      { class: figureClass },
       img,
       [
         'figcaption',

@@ -40,11 +40,12 @@ export const translations = {
       youIn: 'ВЫ В',
       materials: 'материалы',
       read: 'Читать',
-      goTo: 'Перейти',
+      goTo: 'Перейти на сайт партнёра',
     },
     article: {
       onlyInRussian: 'Эта статья доступна только на русском.',
       showInRussian: 'Показать на русском',
+      readAlso: 'Читать так же',
     },
     cooperation: {
       headline: 'Расскажите о своем бизнесе всему городу и туристам.',
@@ -154,11 +155,12 @@ export const translations = {
       youIn: 'YOU ARE IN',
       materials: 'materials',
       read: 'Read',
-      goTo: 'Go',
+      goTo: 'Go to partner site',
     },
     article: {
       onlyInRussian: 'This article is only available in Russian.',
       showInRussian: 'Show in Russian',
+      readAlso: 'Read also',
     },
     cooperation: {
       headline: 'Tell the whole city and tourists about your business.',

@@ -5,6 +5,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { ImageFigure } from '@/lib/tiptap-image-figure';
+import { Embed, normalizeEmbedUrl, extractSrcFromPaste } from '@/lib/tiptap-embed';
 import styles from './RichTextEditor.module.css';
 
 interface RichTextEditorProps {
@@ -13,6 +14,8 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+  const editorRef = useRef<ReturnType<typeof useEditor>>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -26,18 +29,43 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         inline: false,
         allowBase64: false,
       }),
+      Embed,
     ],
     content: value || '',
     editorProps: {
       attributes: {
         class: styles.editorContent,
       },
+      handlePaste: (view, event) => {
+        const pastedHtml = event.clipboardData?.getData('text/html') || '';
+        const pastedText = event.clipboardData?.getData('text/plain') || '';
+        const raw = pastedHtml || pastedText;
+        const srcRaw = extractSrcFromPaste(raw);
+        if (srcRaw) {
+          const src = normalizeEmbedUrl(raw) || (srcRaw.startsWith('http') ? srcRaw : '');
+          if (src && editorRef.current) {
+            event.preventDefault();
+            editorRef.current.chain().focus().insertContent({ type: 'embed', attrs: { src } }).run();
+            return true;
+          }
+        }
+        return false;
+      },
     },
   });
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value || '', false);
+    (editorRef as React.MutableRefObject<ReturnType<typeof useEditor> | null>).current = editor;
+  }, [editor]);
+
+  const prevValueRef = useRef(value);
+  useEffect(() => {
+    if (!editor) return;
+    if (value !== prevValueRef.current) {
+      prevValueRef.current = value;
+      if (value !== editor.getHTML()) {
+        editor.commands.setContent(value || '', false);
+      }
     }
   }, [value, editor]);
 
@@ -72,6 +100,18 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   const openUploadDialog = () => {
     setImageMenuOpen(false);
     uploadInputRef.current?.click();
+  };
+
+  const addEmbed = () => {
+    setImageMenuOpen(false);
+    const url = (window.prompt('Ссылка на embed (YouTube, Vimeo или полный iframe URL):', '') ?? '').trim();
+    if (!url) return;
+    const src = normalizeEmbedUrl(url) || (url.startsWith('http://') || url.startsWith('https://') ? url : '');
+    if (!src) {
+      alert('Укажите полную ссылку, например:\nhttps://www.youtube.com/watch?v=...\nили https://www.youtube.com/embed/...');
+      return;
+    }
+    editor?.chain().focus().insertContent({ type: 'embed', attrs: { src } }).run();
   };
 
   const uploadInputRef = useRef<HTMLInputElement>(null);
@@ -374,6 +414,9 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           className={styles.hiddenFileInput}
           aria-hidden
         />
+        <button type="button" onClick={addEmbed} title="Вставить embed (YouTube, Vimeo и др.)">
+          📺
+        </button>
       </div>
       <EditorContent editor={editor} className={styles.editor} />
 

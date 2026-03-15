@@ -1,0 +1,40 @@
+.wrapper {
+  position: relative;
+}
+
+.alignBar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.alignBar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border, #ddd);
+  background: var(--card, #fff);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--muted, #666);
+}
+
+.alignBar button:hover {
+  background: var(--muted, #eee);
+  color: var(--text, #333);
+}
+
+.alignBar button.active {
+  background: var(--pink, #e91e63);
+  border-color: var(--pink, #e91e63);
+  color: #fff;
+}
+
+.alignBar button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.3);
+}

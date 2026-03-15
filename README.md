@@ -49,7 +49,7 @@ npm run dev
 |-------------------------|----------|
 | `DATABASE_URL`          | Строка подключения к БД (см. ниже) |
 | `JWT_SECRET`            | **Обязательно в production.** Длинная случайная строка (32+ символов) для подписи JWT. Без неё приложение в production не запустится. |
-| `BLOB_READ_WRITE_TOKEN` | Для загрузки картинок в статьях на Vercel. В панели Vercel: Storage → Create Database → Blob. Токен создаётся автоматически; локально можно не задавать (файлы сохраняются в `public/uploads`). |
+| `BLOB_READ_WRITE_TOKEN` | Для загрузки картинок в статьях на Vercel. В панели Vercel: Storage → Create Database → Blob. Токен создаётся автоматически; локально можно не задавать (файлы сохраняются в `public/uploads`). На своём сервере не задавайте — используйте `UPLOAD_DIR` и `UPLOAD_PUBLIC_BASE` (см. [deploy/DEPLOY-SERVER.md](deploy/DEPLOY-SERVER.md)). |
 
 ### База данных
 
@@ -66,6 +66,7 @@ npm run dev
 
 - **Vercel:** подключите репозиторий, добавьте `DATABASE_URL` (Postgres) и `JWT_SECRET`, деплой — автоматический. Чтобы загрузка картинок в статьях работала, в проекте создайте Blob store (Storage → Blob) — переменная `BLOB_READ_WRITE_TOKEN` подставится сама. Миграции и сид — через локальный Prisma с прод-`DATABASE_URL` или скрипт деплоя.
 - **Railway:** создайте сервис из репозитория, добавьте переменные; при необходимости создайте том для SQLite и укажите путь к файлу в `DATABASE_URL`. Команда запуска: `npm run start`.
+- **Свой сервер (VPS):** загрузка картинок без Blob — каталог на диске и nginx для `/uploads/`. Пошаговая инструкция и пример конфига: [deploy/DEPLOY-SERVER.md](deploy/DEPLOY-SERVER.md).
 
 ## Структура проекта
 

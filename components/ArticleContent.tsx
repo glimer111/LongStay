@@ -6,6 +6,10 @@ import { removeDuplicateCaptionParagraphs } from '@/lib/sanitizeArticleHtml';
 import Image from 'next/image';
 import styles from './ArticleContent.module.css';
 
+type ContentSegment =
+  | { type: 'html'; content: string }
+  | { type: 'embed'; src: string };
+
 interface Article {
   titleRu: string;
   titleEn: string | null;
@@ -55,6 +59,38 @@ function normalizeArticleContent(html: string): string {
   return div.innerHTML;
 }
 
+/** Если в src попал HTML/атрибуты — оставляет только первый валидный https-URL. */
+function cleanEmbedSrc(raw: string): string {
+  const t = raw.trim();
+  if (!t.includes('<') && !t.includes('width=') && /^https?:\/\/[^\s"']+$/i.test(t)) return t;
+  const m = t.match(/https?:\/\/[^\s"'<>]+/i);
+  return m ? m[0] : t;
+}
+
+/** Извлекает блоки embed и src из HTML по строке (без innerHTML, чтобы браузер не трогал iframe). */
+function parseSegmentsFromHtml(html: string): ContentSegment[] {
+  const segs: ContentSegment[] = [];
+  const regex = /<div[^>]*class="[^"]*article-embed[^"]*"[^>]*>[\s\S]*?<iframe[\s\S]*?src=["']([^"']+)["'][\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    if (match.index > lastIndex) {
+      segs.push({ type: 'html', content: html.slice(lastIndex, match.index) });
+    }
+    const src = cleanEmbedSrc(match[1] || '');
+    if (src && /^https?:\/\//i.test(src)) {
+      segs.push({ type: 'embed', src });
+    } else {
+      segs.push({ type: 'html', content: match[0] });
+    }
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < html.length) {
+    segs.push({ type: 'html', content: html.slice(lastIndex) });
+  }
+  return segs.length > 0 ? segs : [{ type: 'html', content: html }];
+}
+
 export default function ArticleContent({ article }: { article: Article }) {
   const { locale, setLocale, t } = useLanguage();
   const hasEnglish = (article.titleEn != null && String(article.titleEn).trim() !== '') &&
@@ -79,10 +115,50 @@ export default function ArticleContent({ article }: { article: Article }) {
   const excerpt = locale === 'ru' ? article.excerptRu : (article.excerptEn || article.excerptRu);
   const rawContent = locale === 'ru' ? article.contentRu : (article.contentEn || article.contentRu);
   const [content, setContent] = useState(rawContent);
+  const [segments, setSegments] = useState<ContentSegment[] | null>(null);
 
   useEffect(() => {
-    setContent(normalizeArticleContent(rawContent));
+    const normalized = typeof document !== 'undefined' ? normalizeArticleContent(rawContent) : rawContent;
+    setContent(normalized);
+    setSegments(parseSegmentsFromHtml(normalized));
   }, [rawContent]);
+
+  const renderContent = () => {
+    if (segments !== null && segments.length > 0) {
+      return (
+        <div className={styles.content}>
+          {segments.map((seg, i) =>
+            seg.type === 'embed' ? (
+              <div key={i} className={styles.embedBlock}>
+                <div className={styles.embedVideoWrap}>
+                  <iframe
+                    src={seg.src}
+                    className={styles.embedIframe}
+                    title="Встроенное содержимое"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                <a
+                  href={seg.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.embedFallbackLink}
+                >
+                  Открыть в новой вкладке
+                </a>
+              </div>
+            ) : (
+              <div key={i} style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: seg.content }} />
+            )
+          )}
+        </div>
+      );
+    }
+    return (
+      <div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
+    );
+  };
 
   return (
     <article className={styles.article}>
@@ -94,10 +170,7 @@ export default function ArticleContent({ article }: { article: Article }) {
             <img src={article.imageUrl} alt="" />
           </div>
         )}
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        {renderContent()}
       </div>
     </article>
   );

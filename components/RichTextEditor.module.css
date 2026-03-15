@@ -153,6 +153,28 @@
   margin: 1rem 0;
 }
 
+.editor :global(.ProseMirror figure.article-figure--left) {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.editor :global(.ProseMirror figure.article-figure--center) {
+  float: none;
+  clear: both;
+  width: max-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.editor :global(.ProseMirror figure.article-figure--right) {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .editor :global(.ProseMirror figure.article-figure img) {
   max-width: 100%;
   height: auto;
@@ -170,6 +192,34 @@
 .editor :global(.ProseMirror .article-figcaption .caption-attribution),
 .editor :global(.ProseMirror .article-figcaption .caption-description) {
   display: block;
+}
+
+.editor :global(.ProseMirror .article-embed) {
+  margin: 1.25rem 0;
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.editor :global(.ProseMirror .article-embed--empty) {
+  padding: 1.5rem;
+  min-height: 0;
+  background: var(--card, #f5f5f5);
+  border: 1px dashed var(--border, #ccc);
+  border-radius: 12px;
+  color: var(--muted, #666);
+  font-size: 14px;
+}
+
+.editor :global(.ProseMirror .article-embed-iframe) {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 12px;
 }
 
 .editor :global(.ProseMirror a) {
