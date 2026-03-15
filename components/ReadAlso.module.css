@@ -19,17 +19,12 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 20px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 8px;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
 }
 
 .card {
-  flex: 0 0 260px;
-  width: 260px;
-  scroll-snap-align: start;
+  flex: 1 1 0;
+  min-width: 160px;
+  max-width: 280px;
   text-decoration: none;
   color: var(--text, #111);
   background: var(--card, #fff);
@@ -114,13 +109,12 @@
     font-size: 36px;
   }
   .grid {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 16px;
-    padding-right: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .card {
-    flex: 0 0 220px;
-    width: 220px;
+    flex: 1 1 160px;
+    min-width: 140px;
+    max-width: none;
   }
 }

@@ -22,16 +22,81 @@ git push origin main
 
 **2. На сервере: подтянуть код и пересобрать**
 
+Сначала узнайте, где на сервере лежит проект и как называется процесс в PM2:
+
 ```bash
 ssh root@ВАШ_IP
-cd /var/www/long-stay   # или ваш APP_ROOT
-git pull origin main
-npm ci                   # установить зависимости (или npm install)
-npm run build            # prisma generate + next build
-pm2 restart long-stay    # или как у вас называется процесс
+
+# Узнать каталог приложения (если не помните):
+pm2 list
+pm2 show <имя_процесса>   # в выводе смотрите cwd (рабочая директория)
+
+# Или поиск по диску:
+find /var /home /opt -name "package.json" -path "*long*" 2>/dev/null | head -5
 ```
 
-После этого сайт будет работать с новым кодом. Статьи и загрузки в `uploads/` при `git pull` не теряются, если вы не удаляете эти каталоги и они не в .gitignore с удалением.
+Подставьте **реальный путь** к проекту вместо `APP_ROOT` в командах ниже:
+
+```bash
+cd APP_ROOT               # например: cd /var/www/longstay
+git pull origin main
+npm ci                    # или npm install
+npm run build             # использует npx prisma generate
+pm2 restart <имя_процесса>   # например: pm2 restart longstay
+```
+
+**Если на сервере мало RAM и `npm ci` завершается с "Killed":** установка оборвалась, `node_modules` неполный. Добавьте swap и переустановите зависимости:
+
+```bash
+# Один раз создать swap (если ещё нет):
+sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+
+cd APP_ROOT
+rm -rf node_modules
+npm ci
+npm run build
+pm2 restart <имя_процесса>
+```
+
+Если папки проекта на сервере ещё нет — сначала клонируйте репозиторий в нужное место, настройте `.env`, выполните `npm ci`, `npm run build`, затем запустите приложение (например `pm2 start npm --name "long-stay" -- start`).
+
+После этого сайт будет работать с новым кодом. Статьи и загрузки в `uploads/` при `git pull` не теряются, если вы не удаляете эти каталоги.
+
+---
+
+## Проверка: изменения не видны на сайте
+
+Если после `git pull` и `pm2 restart` на сайте ничего не поменялось:
+
+**1. Убедиться, что сборка прошла до конца**
+
+На сервере:
+```bash
+cd /var/www/longstay
+npm run build
+```
+Должно завершиться без ошибок, в конце — `Generating static pages` и сообщение о создании `.next`. Если была ошибка `prisma: not found` или `Killed` — см. блок выше (swap, `rm -rf node_modules`, `npm ci`).
+
+**2. Проверить, что на сервере последний код**
+
+```bash
+cd /var/www/longstay
+git log -1 --oneline
+grep -l "getInstagramEmbedUrl" lib/embed.ts
+```
+Если файл найден и в `git log` последний коммит с вашими правками — код подтянут.
+
+**3. Перезапустить приложение после успешного build**
+
+```bash
+pm2 restart longstay
+pm2 logs longstay --lines 20
+```
+В логах не должно быть ошибок при старте.
+
+**4. Сбросить кэш браузера**
+
+Откройте сайт в режиме инкогнито или с принудительным обновлением (Ctrl+F5 / Cmd+Shift+R), чтобы не показывалась старая версия из кэша.
 
 ---
 
