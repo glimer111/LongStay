@@ -12,7 +12,7 @@ npm install
 
 ## Настройка базы данных (локально)
 
-Локально используется **SQLite** — ничего устанавливать не нужно. Файл `.env` уже с нужным `DATABASE_URL`.
+В проекте в `prisma/schema.prisma` указан **PostgreSQL** (для деплоя и своего сервера). Локально задайте `DATABASE_URL` в `.env` (например PostgreSQL через [Neon](https://neon.tech) или локальный Docker).
 
 Инициализируйте базу (один раз после клона):
 ```bash
@@ -21,7 +21,7 @@ npx prisma db push
 npx prisma db seed
 ```
 
-База создастся в `prisma/dev.db`. Для деплоя на Vercel используйте PostgreSQL (Neon) и смените в `prisma/schema.prisma` провайдер на `postgresql`.
+Для локальной разработки без PostgreSQL можно временно сменить в `schema.prisma` провайдер на `sqlite` и указать `DATABASE_URL="file:./dev.db"` — база создастся в `prisma/dev.db`.
 
 ## Запуск
 
